@@ -1,6 +1,79 @@
 (() => {
   const $ = (s, root=document) => root.querySelector(s);
   const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+
+  // Local-only prototype authentication. Passwords are PBKDF2 hashes, never stored as plain text.
+  const accountStoreKey='negram-local-accounts-v1';
+  const sessionStoreKey='negram-local-session-v1';
+  document.body.classList.add('logged-out');
+  const authScreen=$('#auth-screen');
+  const loginForm=$('#login-form'), registerForm=$('#register-form');
+  const authError=$('#auth-error');
+  let currentAccount=null;
+  function readAccounts(){try{return JSON.parse(localStorage.getItem(accountStoreKey)||'[]')}catch{return []}}
+  function writeAccounts(accounts){localStorage.setItem(accountStoreKey,JSON.stringify(accounts))}
+  function bytesToHex(bytes){return [...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,'0')).join('')}
+  async function passwordHash(password,saltHex){
+    if(!crypto?.subtle) throw new Error('Для регистрации открой NEGRAM через HTTPS в Safari.');
+    const salt=saltHex?new Uint8Array(saltHex.match(/.{2}/g).map(x=>parseInt(x,16))):crypto.getRandomValues(new Uint8Array(16));
+    const material=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);
+    const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:120000,hash:'SHA-256'},material,256);
+    return {salt:bytesToHex(salt),hash:bytesToHex(bits)};
+  }
+  function showAuthMode(mode){
+    const registering=mode==='register';loginForm.hidden=registering;registerForm.hidden=!registering;
+    $('#auth-title').textContent=registering?'Создай свой аккаунт':'С возвращением';
+    $('#auth-subtitle').textContent=registering?'Твоё имя и профиль будут сохранены на этом iPhone.':'Войди в свой аккаунт NEGRAM.';
+    $('#auth-switch-text').innerHTML=registering?'Уже есть аккаунт? <button type="button" id="show-login">Войти</button>':'Впервые в NEGRAM? <button type="button" id="show-register">Создать аккаунт</button>';
+    $('#show-register')?.addEventListener('click',()=>showAuthMode('register'));
+    $('#show-login')?.addEventListener('click',()=>showAuthMode('login'));
+    authError.textContent='';
+  }
+  function updateAccountUI(account){
+    currentAccount=account;
+    const displayName=account?.name||'Пользователь';
+    const username='@'+(account?.username||'the_ugly_smile');
+    const initial=(displayName.trim()[0]||'N').toUpperCase();
+    const nameNode=$('#profile-display-name'), userNode=$('#profile-username'), avatar=$('#profile-avatar');
+    if(nameNode)nameNode.textContent=displayName;
+    if(userNode)userNode.textContent=username;
+    if(avatar){avatar.textContent=initial;const glint=document.createElement('span');glint.className='avatar-glint';avatar.appendChild(glint)}
+    const mini=$('.avatar-mini');if(mini)mini.textContent=initial;
+    const badge=$('.profile-badge');if(badge)badge.textContent=account?.username==='the_ugly_smile'?'✦ OWNER':'NEGRAM MEMBER';
+  }
+  const profileAssetsKey='negram-profile-assets-v1';
+  function loadProfileAssets(){try{return JSON.parse(localStorage.getItem(profileAssetsKey)||'{}')}catch{return {}}}
+  function applyProfileAssets(){const assets=loadProfileAssets();const avatar=$('#profile-avatar'),cover=$('#profile-cover');if(assets.avatar&&avatar){avatar.textContent='';const img=document.createElement('img');img.src=assets.avatar;img.alt='Фото профиля';avatar.appendChild(img)}if(assets.cover&&cover){cover.style.backgroundImage=`linear-gradient(90deg,rgba(12,9,29,.25),rgba(12,9,29,.42)),url("${assets.cover}")`;cover.style.backgroundSize='cover';cover.style.backgroundPosition='center'}}
+  function saveProfileAsset(kind,file){if(!file||!file.type.startsWith('image/'))return;const reader=new FileReader();reader.onload=()=>{const assets=loadProfileAssets();assets[kind]=reader.result;try{localStorage.setItem(profileAssetsKey,JSON.stringify(assets));applyProfileAssets();toast(kind==='avatar'?'Фото профиля обновлено':'Обложка профиля обновлена')}catch{toast('Файл слишком большой. Выбери фото поменьше.')}};reader.readAsDataURL(file)}
+  $('#change-avatar')?.addEventListener('click',()=>$('#avatar-file').click());
+  $('#change-cover')?.addEventListener('click',()=>$('#cover-file').click());
+  $('#avatar-file')?.addEventListener('change',e=>{saveProfileAsset('avatar',e.target.files?.[0]);e.target.value=''});
+  $('#cover-file')?.addEventListener('change',e=>{saveProfileAsset('cover',e.target.files?.[0]);e.target.value=''});
+  applyProfileAssets();
+
+  function enterApp(account){
+    currentAccount=account;localStorage.setItem(sessionStoreKey,account.username);
+    updateAccountUI(account);document.body.classList.remove('logged-out');
+    authError.textContent='';showAuthMode('login');
+  }
+  $('#show-register')?.addEventListener('click',()=>showAuthMode('register'));
+  loginForm.addEventListener('submit',async e=>{
+    e.preventDefault();authError.textContent='';
+    const username=$('#login-username').value.trim().toLowerCase();const password=$('#login-password').value;
+    const account=readAccounts().find(a=>a.username===username);
+    if(!account){authError.textContent='Аккаунт не найден. Проверь имя или создай аккаунт.';return}
+    try{const result=await passwordHash(password,account.salt);if(result.hash!==account.hash){authError.textContent='Неверный пароль. Попробуй ещё раз.';return}enterApp(account)}catch(err){authError.textContent=err.message||'Не удалось выполнить вход.'}
+  });
+  registerForm.addEventListener('submit',async e=>{
+    e.preventDefault();authError.textContent='';
+    const name=$('#register-name').value.trim();const username=$('#register-username').value.trim().toLowerCase();const password=$('#register-password').value;
+    if(!/^[a-z0-9_]{3,24}$/.test(username)){authError.textContent='Имя пользователя: 3–24 символа, латиница, цифры или _. ';return}
+    if(password.length<8){authError.textContent='Пароль должен содержать минимум 8 символов.';return}
+    const accounts=readAccounts();if(accounts.some(a=>a.username===username)){authError.textContent='Это имя пользователя уже занято на этом устройстве.';return}
+    try{const secured=await passwordHash(password);const account={name,username,salt:secured.salt,hash:secured.hash,createdAt:Date.now()};accounts.push(account);writeAccounts(accounts);enterApp(account);toast('Аккаунт создан на этом iPhone')}catch(err){authError.textContent=err.message||'Не удалось создать аккаунт.'}
+  });
+  $('#switch-account')?.addEventListener('click',()=>{localStorage.removeItem(sessionStoreKey);currentAccount=null;document.body.classList.add('logged-out');$('#login-password').value='';$('#login-username').value='';showAuthMode('login')});
+  try{const savedUsername=localStorage.getItem(sessionStoreKey);const savedAccount=readAccounts().find(a=>a.username===savedUsername);if(savedAccount){updateAccountUI(savedAccount);document.body.classList.remove('logged-out')}else{localStorage.removeItem(sessionStoreKey)}}catch{}
   const pages = ['chats','chat','profile','stickers','bubbles','themes','premium','settings'];
   const toastEl = $('#toast'); let toastTimer;
   function toast(message){toastEl.textContent=message;toastEl.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toastEl.classList.remove('show'),2300)}
@@ -9,7 +82,8 @@
   $('#open-demo-chat').addEventListener('click',()=>go('chat'));$('#empty-open').addEventListener('click',()=>go('chat'));$('#new-chat').addEventListener('click',()=>{go('chat');toast('Открыт твой тестовый диалог')});
 
   const storageKey='negram-demo-messages-v1';let messages=[];try{messages=JSON.parse(localStorage.getItem(storageKey)||'[]')}catch{}
-  const area=$('#messages-area');
+  const area=$('#messages-area');messages=messages.map((m,i)=>({...m,id:m.id||('legacy-'+i)}));
+  function persistMessages(){try{localStorage.setItem(storageKey,JSON.stringify(messages.filter(x=>x.type!=='media'&&x.type!=='voice')))}catch{}}
   function render(){area.querySelectorAll('.message').forEach(n=>n.remove());const welcome=$('.welcome-message');if(messages.length&&welcome)welcome.style.display='none';else if(welcome)welcome.style.display='block';messages.forEach(m=>addMessageNode(m,false));if(messages.length){const last=messages[messages.length-1];$('#last-preview').textContent=last.type==='sticker'?'Стикер: '+(stickerNames[last.stickerId]||'NEGRAM'):last.type==='media'?(last.mediaType.startsWith('video/')?'Видео':'Фото'):last.type==='voice'?'Голосовое сообщение':last.text;$('#last-time').textContent=last.time}area.scrollTop=area.scrollHeight}
   const stickerMarkup={
     pulse:'<svg viewBox="0 0 120 120" aria-hidden="true"><defs><radialGradient id="gp"><stop stop-color="#f4eaff"/><stop offset=".4" stop-color="#bd9aff"/><stop offset="1" stop-color="#6245d7"/></radialGradient></defs><circle cx="60" cy="61" r="43" fill="url(#gp)"/><path d="M28 48Q38 17 72 22" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="5" stroke-linecap="round"/><ellipse cx="46" cy="58" rx="5" ry="7" fill="#211743"/><ellipse cx="74" cy="58" rx="5" ry="7" fill="#211743"/><path d="M47 76Q60 88 74 75" fill="none" stroke="#34205e" stroke-width="4" stroke-linecap="round"/></svg>',
@@ -24,15 +98,16 @@
   const stickerNames={pulse:'Пульс',wisp:'Висп',prism:'Призма',orbit:'Орбит',heart:'Люми',alien:'Зип',moon:'Луна',spark:'Искра',fox:'Фокс',cat:'Нокс',dragon:'Драко',robot:'Бип',capy:'Капи',frog:'Квак',penguin:'Пин',rocket:'Рокет',planet:'Сатурн',mushroom:'Шрум',lightning:'Заряд',trophy:'Топ'};
   const extraStickerGlyphs={fox:'🦊',cat:'🐈‍⬛',dragon:'🐉',robot:'🤖',capy:'🦫',frog:'🐸',penguin:'🐧',rocket:'🚀',planet:'🪐',mushroom:'🍄',lightning:'⚡',trophy:'🏆'};
   Object.entries(extraStickerGlyphs).forEach(([id,glyph])=>{stickerMarkup[id]=`<svg viewBox="0 0 120 120" aria-hidden="true"><defs><radialGradient id="grad-${id}"><stop stop-color="#f5eaff"/><stop offset=".5" stop-color="#a98cff"/><stop offset="1" stop-color="#436bd1"/></radialGradient></defs><circle cx="60" cy="60" r="49" fill="url(#grad-${id})" opacity=".18"/><text x="60" y="79" text-anchor="middle" font-size="76">${glyph}</text><path d="M18 29l5-8m74 9 5-8" stroke="#e6d8ff" stroke-width="3" stroke-linecap="round"/></svg>`});
-  function addMessageNode(m,scroll=true){const node=document.createElement('div');node.className='message outgoing'+(m.type==='sticker'?' sticker-message':'')+(m.type==='media'?' media-message':'')+(m.type==='voice'?' voice-message':'');if(m.type==='sticker'&&stickerMarkup[m.stickerId]){const art=document.createElement('div');art.className='sent-sticker sent-'+m.stickerId;art.innerHTML=stickerMarkup[m.stickerId];node.appendChild(art)}else if(m.type==='customSticker'&&m.image){const wrap=document.createElement('div');wrap.className='custom-sticker-message';const img=document.createElement('img');img.src=m.image;wrap.appendChild(img);if(m.caption){const cap=document.createElement('strong');cap.textContent=m.caption;wrap.appendChild(cap)}node.appendChild(wrap)}else if(m.type==='media'&&m.url){if(m.mediaType.startsWith('video/')){const video=document.createElement('video');video.src=m.url;video.controls=true;video.playsInline=true;node.appendChild(video)}else{const img=document.createElement('img');img.src=m.url;img.alt='Фото';node.appendChild(img)}}else if(m.type==='voice'&&m.url){const audio=document.createElement('audio');audio.controls=true;audio.src=m.url;if(m.voicePreset==='autotune')audio.playbackRate=1.07;if(m.voicePreset==='deep')audio.playbackRate=.92;if(m.voicePreset==='robot')audio.playbackRate=1.12;node.appendChild(audio);const note=document.createElement('small');note.textContent=m.voicePreset==='autotune'?'✨ AutoTune Pop':m.voicePreset==='deep'?'Deep voice':m.voicePreset==='robot'?'Robot voice':'Оригинальный голос';node.appendChild(note)}else{node.appendChild(document.createTextNode(m.text||''))}const time=document.createElement('time');time.textContent=m.time;node.appendChild(time);area.appendChild(node);if(scroll)area.scrollTop=area.scrollHeight}
-  function sendSticker(id){if(!stickerMarkup[id])return;const m={type:'sticker',stickerId:id,text:'Стикер: '+stickerNames[id],time:clock()};messages.push(m);try{localStorage.setItem(storageKey,JSON.stringify(messages))}catch{};const welcome=$('.welcome-message');if(welcome)welcome.style.display='none';addMessageNode(m);$('#last-preview').textContent='Стикер: '+stickerNames[id];$('#last-time').textContent='сейчас';go('chat');toast('Стикер отправлен в тестовый чат')}
+  function addMessageNode(m,scroll=true){const node=document.createElement('div');node.className='message outgoing'+(m.type==='sticker'?' sticker-message':'')+(m.type==='media'?' media-message':'')+(m.type==='voice'?' voice-message':'')+(m.type==='customSticker'?' custom-sticker':'');node.dataset.messageId=m.id||'';if(m.type==='sticker'&&stickerMarkup[m.stickerId]){const art=document.createElement('div');art.className='sent-sticker sent-'+m.stickerId;art.innerHTML=stickerMarkup[m.stickerId];node.appendChild(art)}else if(m.type==='customSticker'&&m.image){const wrap=document.createElement('div');wrap.className='custom-sticker-message';const img=document.createElement('img');img.src=m.image;wrap.appendChild(img);if(m.caption){const cap=document.createElement('strong');cap.textContent=m.caption;wrap.appendChild(cap)}node.appendChild(wrap)}else if(m.type==='media'&&m.url){if(m.mediaType.startsWith('video/')){const video=document.createElement('video');video.src=m.url;video.controls=true;video.playsInline=true;node.appendChild(video)}else{const img=document.createElement('img');img.src=m.url;img.alt='Фото';node.appendChild(img)}}else if(m.type==='voice'&&m.url){const audio=document.createElement('audio');audio.controls=true;audio.src=m.url;if(m.voicePreset==='autotune')audio.playbackRate=1.07;if(m.voicePreset==='deep')audio.playbackRate=.92;if(m.voicePreset==='robot')audio.playbackRate=1.12;node.appendChild(audio);const note=document.createElement('small');note.textContent=m.voicePreset==='autotune'?'✨ AutoTune Pop':m.voicePreset==='deep'?'Deep voice':m.voicePreset==='robot'?'Robot voice':'Оригинальный голос';node.appendChild(note)}else{node.appendChild(document.createTextNode(m.text||''))}const time=document.createElement('time');time.textContent=m.time;node.appendChild(time);const del=document.createElement('button');del.type='button';del.className='message-delete';del.textContent='×';del.setAttribute('aria-label','Удалить сообщение');del.addEventListener('click',()=>deleteMessage(m.id));node.appendChild(del);area.appendChild(node);if(scroll)area.scrollTop=area.scrollHeight}
+  function deleteMessage(id){if(!id)return;messages=messages.filter(m=>m.id!==id);persistMessages();const node=area.querySelector(`[data-message-id=\"${CSS.escape(id)}\"]`);node?.remove();if(!messages.length){const welcome=$('.welcome-message');if(welcome)welcome.style.display='block'}const last=messages[messages.length-1];$('#last-preview').textContent=last?(last.text|| (last.type==='sticker'?'Стикер: '+(stickerNames[last.stickerId]||'NEGRAM'):last.type==='customSticker'?'Свой стикер':'Вложение')):'Здесь появятся твои сообщения';toast('Сообщение удалено на этом устройстве')}
+  function sendSticker(id){if(!stickerMarkup[id])return;const m={id:'m-'+Date.now()+'-'+Math.random().toString(16).slice(2),type:'sticker',stickerId:id,text:'Стикер: '+stickerNames[id],time:clock()};messages.push(m);persistMessages();const welcome=$('.welcome-message');if(welcome)welcome.style.display='none';addMessageNode(m);$('#last-preview').textContent='Стикер: '+stickerNames[id];$('#last-time').textContent='сейчас';go('chat');toast('Стикер отправлен в тестовый чат')}
   $('#sticker-collection').addEventListener('click',e=>{const b=e.target.closest('[data-sticker]');if(b)sendSticker(b.dataset.sticker)});
   function clock(){return new Intl.DateTimeFormat('ru-RU',{hour:'2-digit',minute:'2-digit'}).format(new Date())}
-  function persistAndShow(m){messages.push(m);try{localStorage.setItem(storageKey,JSON.stringify(messages.filter(x=>x.type!=='media'&&x.type!=='voice')))}catch{};const welcome=$('.welcome-message');if(welcome)welcome.style.display='none';addMessageNode(m);$('#last-preview').textContent=m.type==='sticker'?'Стикер: '+(stickerNames[m.stickerId]||'NEGRAM'):m.type==='media'?(m.mediaType.startsWith('video/')?'Видео':'Фото'):m.type==='voice'?'Голосовое сообщение':m.text;$('#last-time').textContent='сейчас'}
+  function persistAndShow(m){m.id=m.id||('m-'+Date.now()+'-'+Math.random().toString(16).slice(2));messages.push(m);persistMessages();const welcome=$('.welcome-message');if(welcome)welcome.style.display='none';addMessageNode(m);$('#last-preview').textContent=m.type==='sticker'?'Стикер: '+(stickerNames[m.stickerId]||'NEGRAM'):m.type==='media'?(m.mediaType.startsWith('video/')?'Видео':'Фото'):m.type==='voice'?'Голосовое сообщение':m.text;$('#last-time').textContent='сейчас'}
   $('#message-form').addEventListener('submit',e=>{e.preventDefault();const input=$('#message-input');const text=input.value.trim();if(!text)return;persistAndShow({text,time:clock()});input.value=''});
   $('#attach-button').addEventListener('click',()=>$('#media-input').click());
   $('#media-input').addEventListener('change',e=>{[...e.target.files].forEach(file=>{if(!file.type.startsWith('image/')&&!file.type.startsWith('video/'))return;const url=URL.createObjectURL(file);persistAndShow({type:'media',url,mediaType:file.type,text:file.name,time:clock()})});e.target.value=''});
-  const tray=$('#inline-sticker-tray');$('#sticker-toggle').addEventListener('click',()=>{tray.hidden=!tray.hidden;if(!tray.hidden){const list=$('#inline-sticker-list');list.innerHTML='';Object.entries(extraStickerGlyphs).concat([['pulse','🟣'],['wisp','👻'],['prism','💎'],['orbit','🪐'],['heart','💗'],['alien','👽'],['moon','🌙'],['spark','⭐']]).forEach(([id,g])=>{const b=document.createElement('button');b.type='button';b.className='inline-sticker';b.textContent=g;b.title=stickerNames[id];b.addEventListener('click',()=>{sendSticker(id);tray.hidden=true});list.appendChild(b)})}});
+  const tray=$('#inline-sticker-tray');$('#sticker-toggle').addEventListener('click',()=>{tray.hidden=!tray.hidden;if(!tray.hidden){const list=$('#inline-sticker-list');list.innerHTML='';Object.entries(extraStickerGlyphs).concat([['pulse','🟣'],['wisp','👻'],['prism','💎'],['orbit','🪐'],['heart','💗'],['alien','👽'],['moon','🌙'],['spark','⭐']]).forEach(([id,g])=>{const b=document.createElement('button');b.type='button';b.className='inline-sticker';b.textContent=g;b.title=stickerNames[id];b.addEventListener('click',()=>{sendSticker(id);tray.hidden=true});list.appendChild(b)});let mine=[];try{mine=JSON.parse(localStorage.getItem('negram-my-stickers')||'[]')}catch{};mine.forEach((sticker,index)=>{const b=document.createElement('button');b.type='button';b.className='inline-sticker inline-custom-sticker';b.title=sticker.caption||'Мой стикер';const img=document.createElement('img');img.src=sticker.image;img.alt=sticker.caption||'Мой стикер';b.appendChild(img);b.addEventListener('click',()=>{persistAndShow({type:'customSticker',image:sticker.image,caption:sticker.caption,time:clock()});tray.hidden=true;go('chat')});list.appendChild(b)})}});
   $('#open-sticker-gallery').addEventListener('click',()=>go('stickers'));
   let activeVoicePreset='autotune';$$('.voice-preset').forEach(b=>b.addEventListener('click',()=>{$$('.voice-preset').forEach(x=>x.classList.toggle('active',x===b));activeVoicePreset=b.dataset.voice}));
   let recorder=null,recordChunks=[],recording=false,recordStream=null;
@@ -64,12 +139,13 @@
   $('#theme-toggle').addEventListener('click',()=>{document.body.classList.toggle('glow-off');$('#glow-toggle').classList.toggle('on');try{localStorage.setItem('negram-glow',document.body.classList.contains('glow-off')?'off':'on')}catch{}});
   try{if(localStorage.getItem('negram-glow')==='off'){document.body.classList.add('glow-off');$('#glow-toggle').classList.remove('on')}}catch{}
   $('#install-help').addEventListener('click',()=>toast('В Safari нажми «Поделиться» → «На экран Домой»'));
-  $('#about-button').addEventListener('click',()=>toast('NEGRAM · версия 0.5 · стикеры и голосовые эффекты'));
+  $('#about-button').addEventListener('click',()=>toast('NEGRAM · версия 0.7 · профиль, коды и сообщения'));
 
   const premiumKey='negram-premium-demo';
   function updatePremium(){const active=localStorage.getItem(premiumKey)==='active';const label=$('#premium-status');if(label)label.textContent=active?'ДЕМО PREMIUM АКТИВЕН':'PREMIUM НЕ ПОДКЛЮЧЁН';const btn=$('#premium-demo-toggle');if(btn)btn.textContent=active?'Отключить демо Premium':'Включить демо Premium';}
   $('#premium-demo-toggle')?.addEventListener('click',()=>{const active=localStorage.getItem(premiumKey)==='active';try{localStorage.setItem(premiumKey,active?'off':'active')}catch{};updatePremium();toast(active?'Демо Premium отключён':'Демо Premium включён — оплаты не было')});
   updatePremium();
+  $('#activate-premium-code')?.addEventListener('click',()=>{const code=$('#premium-code-input').value.trim().toUpperCase();const result=$('#premium-code-result');if(code==='NEGRAM-TEST-2026'||code==='NEGRAM-PREMIUM-TEST'){try{localStorage.setItem(premiumKey,'active')}catch{};updatePremium();result.textContent='Демо Premium активирован. Оплата не производилась.';result.className='code-success';toast('Демо Premium активирован')}else if(code==='NEGRAM-OWNER-TEST'){if(currentAccount?.username==='the_ugly_smile'){try{localStorage.setItem(premiumKey,'active')}catch{};updatePremium();result.textContent='Демо Owner Premium активирован.';result.className='code-success'}else{result.textContent='Этот тестовый код предназначен для аккаунта владельца.';result.className='code-error'}}else{result.textContent='Код не распознан. Проверь написание.';result.className='code-error'}});
 
   if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
   render();
