@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#090817">
+  <meta name="theme-color" content="#21123f">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="NEGRAM">
@@ -135,13 +135,24 @@
       </section>
 
       <section class="page" id="page-themes">
-        <div class="page-heading"><div><p class="eyebrow">АТМОСФЕРА NEGRAM</p><h1>Темы</h1><p class="subheading">Меняй настроение всего приложения.</p></div><button class="icon-button" data-page="settings">‹</button></div>
+        <div class="page-heading"><div><p class="eyebrow">АТМОСФЕРА NEGRAM</p><h1>Темы</h1><p class="subheading">Меняй атмосферу приложения и фон переписки.</p></div><button class="icon-button" data-page="settings">‹</button></div>
         <div class="theme-grid">
           <button class="theme-option selected" data-theme="nebula"><span class="theme-art theme-nebula"><i></i><b></b></span><strong>Nebula</strong><small>Фирменная фиолетово-синяя</small><em>✓</em></button>
           <button class="theme-option" data-theme="deep"><span class="theme-art theme-deep"><i></i><b></b></span><strong>Deep Space</strong><small>Глубокий ночной космос</small><em>✓</em></button>
           <button class="theme-option" data-theme="aurora"><span class="theme-art theme-aurora"><i></i><b></b></span><strong>Aurora</strong><small>Северное сияние</small><em>✓</em></button>
           <button class="theme-option" data-theme="platinum"><span class="theme-art theme-platinum"><i></i><b></b></span><strong>Platinum</strong><small>Холодный хром</small><em>✓</em></button>
           <button class="theme-option" data-theme="rose"><span class="theme-art theme-rose"><i></i><b></b></span><strong>Rose Nebula</strong><small>Розово-лиловая дымка</small><em>✓</em></button>
+        </div>
+        <div class="wallpaper-panel">
+          <div class="wallpaper-heading"><div><strong>Обложки и фоны чата</strong><small>Выбери стеклянную атмосферу или загрузи свою картинку</small></div></div>
+          <div class="wallpaper-grid">
+            <button class="wallpaper-option selected" data-wallpaper="nebula"><span class="wallpaper-art wallpaper-nebula"></span><b>Фиолетовая туманность</b></button>
+            <button class="wallpaper-option" data-wallpaper="aurora"><span class="wallpaper-art wallpaper-aurora"></span><b>Сияние</b></button>
+            <button class="wallpaper-option" data-wallpaper="crystal"><span class="wallpaper-art wallpaper-crystal"></span><b>Кристалл</b></button>
+            <button class="wallpaper-option" data-wallpaper="night"><span class="wallpaper-art wallpaper-night"></span><b>Ночная волна</b></button>
+          </div>
+          <div class="wallpaper-actions"><button type="button" id="wallpaper-upload">＋ Загрузить свою обложку</button><button type="button" id="wallpaper-reset">Сбросить фон</button><input id="wallpaper-file" type="file" accept="image/*" hidden></div>
+          <small class="wallpaper-note">Фон применяется к переписке и сохраняется на этом устройстве.</small>
         </div>
       </section>
 

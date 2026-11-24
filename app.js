@@ -136,6 +136,22 @@
   $$('.theme-option').forEach(b=>b.addEventListener('click',()=>setTheme(b.dataset.theme,true)));
   try{setTheme(localStorage.getItem('negram-theme')||'nebula')}catch{setTheme('nebula')}
 
+  // Glass Edition chat wallpapers: preset covers and an optional user image.
+  const wallpaperNames=['nebula','aurora','crystal','night'];
+  function setWallpaper(name,notify=false){
+    if(!wallpaperNames.includes(name) && name!=='custom') name='nebula';
+    document.body.dataset.wallpaper=name;
+    $$('.wallpaper-option').forEach(b=>b.classList.toggle('selected',b.dataset.wallpaper===name));
+    try{localStorage.setItem('negram-wallpaper',name)}catch{}
+    if(notify)toast('Обложка чата изменена');
+  }
+  function loadWallpaper(){try{const name=localStorage.getItem('negram-wallpaper')||'nebula';setWallpaper(name);const image=localStorage.getItem('negram-wallpaper-image');if(image){document.body.style.setProperty('--custom-wallpaper',`url("${image}")`);document.body.dataset.wallpaper='custom';}}catch{setWallpaper('nebula')}}
+  $$('.wallpaper-option').forEach(b=>b.addEventListener('click',()=>{document.body.style.removeProperty('--custom-wallpaper');try{localStorage.removeItem('negram-wallpaper-image')}catch{};setWallpaper(b.dataset.wallpaper,true)}));
+  $('#wallpaper-upload')?.addEventListener('click',()=>$('#wallpaper-file').click());
+  $('#wallpaper-file')?.addEventListener('change',e=>{const file=e.target.files?.[0];if(!file||!file.type.startsWith('image/'))return;const reader=new FileReader();reader.onload=()=>{try{localStorage.setItem('negram-wallpaper-image',reader.result);document.body.style.setProperty('--custom-wallpaper',`url("${reader.result}")`);setWallpaper('custom',true);document.body.dataset.wallpaper='custom'}catch{toast('Изображение слишком большое — выбери файл поменьше')}};reader.readAsDataURL(file);e.target.value=''});
+  $('#wallpaper-reset')?.addEventListener('click',()=>{document.body.style.removeProperty('--custom-wallpaper');try{localStorage.removeItem('negram-wallpaper-image')}catch{};setWallpaper('nebula',true)});
+  loadWallpaper();
+
   $('#theme-toggle').addEventListener('click',()=>{document.body.classList.toggle('glow-off');$('#glow-toggle').classList.toggle('on');try{localStorage.setItem('negram-glow',document.body.classList.contains('glow-off')?'off':'on')}catch{}});
   try{if(localStorage.getItem('negram-glow')==='off'){document.body.classList.add('glow-off');$('#glow-toggle').classList.remove('on')}}catch{}
   $('#install-help').addEventListener('click',()=>toast('В Safari нажми «Поделиться» → «На экран Домой»'));
