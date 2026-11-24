@@ -1,13 +1,13 @@
 {
-  "name": "NEGRAM — твоё пространство",
-  "short_name": "NEGRAM",
-  "description": "Твоё пространство для общения",
+  "name": "NeGram — семейный мессенджер",
+  "short_name": "NeGram",
+  "description": "Старый интерфейс NeGram с возможностями версии 2.0",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#090817",
-  "theme_color": "#090817",
+  "background_color": "#100e19",
+  "theme_color": "#171326",
   "icons": [
     {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"},
     {"src":"apple-touch-icon.png","sizes":"180x180","type":"image/png","purpose":"any"}
