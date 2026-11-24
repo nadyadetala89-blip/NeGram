@@ -50,6 +50,7 @@
         <div class="profile-card"><div class="profile-cover"><div class="cover-orbit orbit-a"></div><div class="cover-orbit orbit-b"></div><span class="cover-word">NEGRAM</span></div><div class="profile-main"><div class="profile-avatar">У<span class="avatar-glint"></span></div><div class="profile-name-row"><div><h2>Пользователь</h2><p>@the_ugly_smile</p></div><span class="profile-badge">✦ OWNER</span></div><p class="profile-bio">Моё пространство. Мои правила.</p><div class="profile-stats"><div><strong>01</strong><span>ДИАЛОГ</span></div><div><strong>∞</strong><span>ИДЕИ</span></div><div><strong>01</strong><span>УСТРОЙСТВО</span></div></div></div></div>
         <div class="section-line"><span>АККАУНТ</span><span class="line"></span></div>
         <div class="settings-list"><button class="setting-row" data-page="settings"><span class="setting-icon violet">◈</span><span><strong>Настройки профиля</strong><small>Имя, описание и оформление</small></span><b>›</b></button><button class="setting-row" data-page="bubbles"><span class="setting-icon blue">▱</span><span><strong>Пузыри сообщений</strong><small>Выбери стиль переписки</small></span><b>›</b></button></div>
+        <button class="premium-shortcut" data-page="premium"><span class="premium-shortcut-icon">✦</span><span><strong>NEGRAM Premium</strong><small>Эксклюзивное оформление и возможности</small></span><b>›</b></button>
       </section>
 
       <section class="page" id="page-stickers">
@@ -62,13 +63,53 @@
         <div class="page-heading"><div><p class="eyebrow">ПЕРСОНАЛИЗАЦИЯ</p><h1>Пузыри</h1><p class="subheading">Выбери настроение переписки.</p></div><button class="icon-button" data-page="profile">‹</button></div>
         <div class="bubble-preview"><span class="preview-label">ПРЕДПРОСМОТР</span><div class="preview-bubble incoming">Привет! Это NEGRAM ✦</div><div class="preview-bubble outgoing" id="bubble-preview-out">Выглядит отлично!</div><span class="preview-time">19:42 · прочитано</span></div>
         <div class="section-line"><span>СТИЛЬ СООБЩЕНИЙ</span><span class="line"></span></div>
-        <div class="bubble-options" id="bubble-options"><button class="bubble-option selected" data-style="glass"><span class="bubble-swatch swatch-glass"></span><span><strong>Crystal Glass</strong><small>Стеклянный блеск</small></span><i>✓</i></button><button class="bubble-option" data-style="violet"><span class="bubble-swatch swatch-violet"></span><span><strong>Violet Dream</strong><small>Мягкий фиолетовый</small></span><i>✓</i></button><button class="bubble-option" data-style="blue"><span class="bubble-swatch swatch-blue"></span><span><strong>Blue Chrome</strong><small>Холодный синий</small></span><i>✓</i></button><button class="bubble-option" data-style="dark"><span class="bubble-swatch swatch-dark"></span><span><strong>Midnight</strong><small>Тёмный минимализм</small></span><i>✓</i></button></div>
+        <div class="bubble-options" id="bubble-options">
+          <button class="bubble-option selected" data-style="glass"><span class="bubble-swatch swatch-glass"></span><span><strong>Crystal Glass</strong><small>Стеклянный блеск</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="violet"><span class="bubble-swatch swatch-violet"></span><span><strong>Violet Dream</strong><small>Мягкий фиолетовый</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="blue"><span class="bubble-swatch swatch-blue"></span><span><strong>Blue Chrome</strong><small>Холодный синий</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="dark"><span class="bubble-swatch swatch-dark"></span><span><strong>Midnight</strong><small>Тёмный минимализм</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="holo"><span class="bubble-swatch swatch-holo"></span><span><strong>Hologram</strong><small>Переливающийся голографик</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="chrome"><span class="bubble-swatch swatch-chrome"></span><span><strong>Liquid Chrome</strong><small>Жидкий серебристый металл</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="neon"><span class="bubble-swatch swatch-neon"></span><span><strong>Neon Pulse</strong><small>Яркое неоновое свечение</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="rose"><span class="bubble-swatch swatch-rose"></span><span><strong>Rose Quartz</strong><small>Розовый кристалл</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="mint"><span class="bubble-swatch swatch-mint"></span><span><strong>Mint Ice</strong><small>Холодная мятная глубина</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="sunset"><span class="bubble-swatch swatch-sunset"></span><span><strong>Solar Flare</strong><small>Тёплый закатный градиент</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="carbon"><span class="bubble-swatch swatch-carbon"></span><span><strong>Carbon</strong><small>Графитовый минимализм</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="crystal"><span class="bubble-swatch swatch-crystal"></span><span><strong>Prism Crystal</strong><small>Гранёный фиолетово-синий кристалл</small></span><i>✓</i></button>
+        </div>
+      </section>
+
+      <section class="page" id="page-themes">
+        <div class="page-heading"><div><p class="eyebrow">АТМОСФЕРА NEGRAM</p><h1>Темы</h1><p class="subheading">Меняй настроение всего приложения.</p></div><button class="icon-button" data-page="settings">‹</button></div>
+        <div class="theme-grid">
+          <button class="theme-option selected" data-theme="nebula"><span class="theme-art theme-nebula"><i></i><b></b></span><strong>Nebula</strong><small>Фирменная фиолетово-синяя</small><em>✓</em></button>
+          <button class="theme-option" data-theme="deep"><span class="theme-art theme-deep"><i></i><b></b></span><strong>Deep Space</strong><small>Глубокий ночной космос</small><em>✓</em></button>
+          <button class="theme-option" data-theme="aurora"><span class="theme-art theme-aurora"><i></i><b></b></span><strong>Aurora</strong><small>Северное сияние</small><em>✓</em></button>
+          <button class="theme-option" data-theme="platinum"><span class="theme-art theme-platinum"><i></i><b></b></span><strong>Platinum</strong><small>Холодный хром</small><em>✓</em></button>
+          <button class="theme-option" data-theme="rose"><span class="theme-art theme-rose"><i></i><b></b></span><strong>Rose Nebula</strong><small>Розово-лиловая дымка</small><em>✓</em></button>
+        </div>
+      </section>
+
+      <section class="page" id="page-premium">
+        <div class="page-heading"><div><p class="eyebrow">БОЛЬШЕ ВОЗМОЖНОСТЕЙ</p><h1>NEGRAM <span class="premium-word">PREMIUM</span></h1><p class="subheading">Расширь своё пространство.</p></div><button class="icon-button" data-page="profile">‹</button></div>
+        <div class="premium-hero"><div class="premium-orb">✦</div><span class="premium-kicker">NEGRAM MEMBERSHIP</span><h2>Твой стиль.<br>Без ограничений.</h2><p>Больше персонализации и эксклюзивных возможностей в одном пространстве.</p><div class="premium-shine"></div></div>
+        <div class="premium-status-row"><span id="premium-status">PREMIUM НЕ ПОДКЛЮЧЁН</span><span class="premium-status-dot"></span></div>
+        <div class="premium-benefits">
+          <div><span>✦</span><section><strong>Эксклюзивные темы</strong><small>Особые цветовые сочетания и эффекты</small></section></div>
+          <div><span>◈</span><section><strong>Расширенные пузыри</strong><small>Дополнительные стили сообщений</small></section></div>
+          <div><span>✧</span><section><strong>NEGRAM Studio</strong><small>Создание и оформление стикеров</small></section></div>
+          <div><span>⌁</span><section><strong>Оформление профиля</strong><small>Обложки, акценты и детали профиля</small></section></div>
+          <div><span>AI</span><section><strong>NEGRAM AI</strong><small>Умные функции в будущих версиях</small></section></div>
+        </div>
+        <div class="premium-price-card"><span class="eyebrow">ПЛАН ПОДПИСКИ</span><div class="price-line"><strong>10 ₽</strong><span>/ 6 месяцев</span></div><p>Предварительная цена из концепции NEGRAM. Реальное оформление подписки пока не подключено.</p><button class="premium-cta" id="premium-demo-toggle">Включить демо Premium</button><small class="premium-disclaimer">Демонстрационный режим ничего не покупает и не списывает деньги.</small></div>
+        <p class="owner-note">OWNER • Для владельца NEGRAM предусмотрен бессрочный Premium. Статус пока отображается как концепция, без проверки аккаунта.</p>
       </section>
 
       <section class="page" id="page-settings">
         <div class="page-heading"><div><p class="eyebrow">ВСЁ ПОД КОНТРОЛЕМ</p><h1>Настройки</h1><p class="subheading">Настрой NEGRAM под себя.</p></div></div>
         <div class="settings-group"><span class="group-label">ВНЕШНИЙ ВИД</span><button class="setting-row" data-page="bubbles"><span class="setting-icon violet">▱</span><span><strong>Пузыри сообщений</strong><small>Стиль и внешний вид</small></span><b>›</b></button><button class="setting-row" id="theme-toggle"><span class="setting-icon blue">☼</span><span><strong>Свечение интерфейса</strong><small>Мягкие акценты NEGRAM</small></span><span class="toggle on" id="glow-toggle"></span></button></div>
-        <div class="settings-group"><span class="group-label">ПРИЛОЖЕНИЕ</span><button class="setting-row" id="install-help"><span class="setting-icon pink">⌂</span><span><strong>Установка на iPhone</strong><small>Добавить NEGRAM на экран «Домой»</small></span><b>›</b></button><button class="setting-row" id="about-button"><span class="setting-icon silver">✦</span><span><strong>О NEGRAM</strong><small>Версия 0.1 · тестовая сборка</small></span><b>›</b></button></div>
+        <div class="settings-group"><span class="group-label">ПЕРСОНАЛИЗАЦИЯ</span><button class="setting-row" data-page="themes"><span class="setting-icon violet">✧</span><span><strong>Темы оформления</strong><small>Цвета и атмосфера приложения</small></span><b>›</b></button><button class="setting-row" data-page="premium"><span class="setting-icon silver">✦</span><span><strong>NEGRAM Premium</strong><small>Подписка и дополнительные возможности</small></span><b>›</b></button></div>
+        <div class="settings-group"><span class="group-label">ПРИЛОЖЕНИЕ</span><button class="setting-row" id="install-help"><span class="setting-icon pink">⌂</span><span><strong>Установка на iPhone</strong><small>Добавить NEGRAM на экран «Домой»</small></span><b>›</b></button><button class="setting-row" id="about-button"><span class="setting-icon silver">✦</span><span><strong>О NEGRAM</strong><small>Версия 0.2 · тестовая сборка</small></span><b>›</b></button></div>
         <p class="settings-foot">NEGRAM <span>•</span> ТВОЁ ПРОСТРАНСТВО</p>
       </section>
     </main>
