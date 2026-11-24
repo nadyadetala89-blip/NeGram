@@ -139,7 +139,7 @@
   $('#theme-toggle').addEventListener('click',()=>{document.body.classList.toggle('glow-off');$('#glow-toggle').classList.toggle('on');try{localStorage.setItem('negram-glow',document.body.classList.contains('glow-off')?'off':'on')}catch{}});
   try{if(localStorage.getItem('negram-glow')==='off'){document.body.classList.add('glow-off');$('#glow-toggle').classList.remove('on')}}catch{}
   $('#install-help').addEventListener('click',()=>toast('В Safari нажми «Поделиться» → «На экран Домой»'));
-  $('#about-button').addEventListener('click',()=>toast('NEGRAM · версия 0.7 · профиль, коды и сообщения'));
+  $('#about-button').addEventListener('click',()=>toast('NEGRAM · версия 0.8 · рукописный стиль'));
 
   const premiumKey='negram-premium-demo';
   function updatePremium(){const active=localStorage.getItem(premiumKey)==='active';const label=$('#premium-status');if(label)label.textContent=active?'ДЕМО PREMIUM АКТИВЕН':'PREMIUM НЕ ПОДКЛЮЧЁН';const btn=$('#premium-demo-toggle');if(btn)btn.textContent=active?'Отключить демо Premium':'Включить демо Premium';}
