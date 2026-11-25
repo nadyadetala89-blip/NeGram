@@ -1,26 +1,20 @@
-NEGRAM 2.0 — FIXED BUILD
+NeGram 0.8 — Emoji Update
 
-Based on the authentic NEGRAM 0.7 interface and its original test chat.
+В архиве:
+- negram.html — обновлённый файл проекта на основе интерфейса NeGram 0.7.
+- negram-0.7-original.html — исходная копия для возврата.
 
-Included:
-- Telegram-inspired glass purple interface
-- Original test chat and local message history
-- NEGRAM Display font applied across the full interface
-- Themes, chat wallpapers, message bubble styles
-- Stickers and custom sticker demo
-- Animated face reactions
-- Video-circle camera recording and local preview
-- NEGRAM AI connection to the configured Worker endpoint
-- Premium demo controls (no real payments)
+Что изменено:
+- добавлено 50 эмодзи-лиц и реакций;
+- лица анимируются лёгкими CSS-анимациями;
+- добавлен редактор своих эмодзи: загрузка PNG/JPG/WEBP/GIF, предпросмотр квадратной обрезки, масштаб, название и сохранение;
+- добавлена локальная коллекция своих эмодзи с удалением;
+- выбор своего эмодзи добавляет картинку в открытый локальный чат.
 
-Important limitations:
-- Accounts, profile, settings, and messages are stored locally in this browser/device.
-- The test chat is not a real multi-user online chat.
-- Video circles and media are local previews; there is no server-side media delivery.
-- Premium is a demonstration and does not charge or activate a real subscription.
-- Online multi-user messaging requires a backend with authentication, database, realtime sync, and media storage.
+Важно:
+- интерфейс и основные разделы NeGram 0.7 сохранены; изменения сосредоточены в разделе «Стикеры».
+- это обновление интерфейса/локального прототипа. Реальная онлайн-доставка сообщений, синхронизация собственных эмодзи между устройствами и серверное хранение здесь ещё не подключены.
+- GIF можно выбрать, но в этой версии сохраняется только его первый кадр.
+- свои эмодзи хранятся в памяти браузера на текущем устройстве. Очистка данных сайта может удалить их.
 
-Deployment:
-Upload the CONTENTS of this folder to the root of a static hosting project.
-Keep index.html, app.js, style.css, manifest.json, sw.js, icon.svg,
-apple-touch-icon.png, and negram-display.otf together in the same directory.
+Для проверки сначала откройте negram.html локально в браузере. Исходный опубликованный сайт этим архивом автоматически не меняется.
