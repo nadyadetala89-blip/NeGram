@@ -1,6 +1,6 @@
 {
-  "name": "NeGram 2.0 — твоё пространство",
-  "short_name": "NeGram 2.0",
+  "name": "NEGRAM — твоё пространство",
+  "short_name": "NEGRAM",
   "description": "Твоё пространство для общения",
   "start_url": "./index.html",
   "scope": "./",
