@@ -1,4 +1,4 @@
-const CACHE='negram-shell-v21';
+const CACHE='negram-shell-v22';
 const FILES=['./','./index.html','./style.css','./app.js','./manifest.json','./icon.svg','./apple-touch-icon.png','./negram-display.otf'];
 self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(FILES))));
 self.addEventListener('activate',event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));
