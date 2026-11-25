@@ -1,20 +1,18 @@
-NeGram 0.8 — Emoji Update
+NEGRAM 2.0 — DEV BUILD (based on original 0.7 interface)
 
-В архиве:
-- negram.html — обновлённый файл проекта на основе интерфейса NeGram 0.7.
-- negram-0.7-original.html — исходная копия для возврата.
+This development build keeps the original NeGram 0.7 interface and local prototype features.
 
-Что изменено:
-- добавлено 50 эмодзи-лиц и реакций;
-- лица анимируются лёгкими CSS-анимациями;
-- добавлен редактор своих эмодзи: загрузка PNG/JPG/WEBP/GIF, предпросмотр квадратной обрезки, масштаб, название и сохранение;
-- добавлена локальная коллекция своих эмодзи с удалением;
-- выбор своего эмодзи добавляет картинку в открытый локальный чат.
+Changes in this build:
+- Temporarily hides the NEGRAM AI page and removes its network request. Existing Cloudflare Worker is not changed.
+- Removes a duplicate chat-options click handler.
+- Prevents duplicate avatar-glint elements after repeated profile updates.
+- Bumps the service-worker cache to v21.
 
-Важно:
-- интерфейс и основные разделы NeGram 0.7 сохранены; изменения сосредоточены в разделе «Стикеры».
-- это обновление интерфейса/локального прототипа. Реальная онлайн-доставка сообщений, синхронизация собственных эмодзи между устройствами и серверное хранение здесь ещё не подключены.
-- GIF можно выбрать, но в этой версии сохраняется только его первый кадр.
-- свои эмодзи хранятся в памяти браузера на текущем устройстве. Очистка данных сайта может удалить их.
+Current limitations (not yet implemented):
+- Accounts and messages are local to one browser/device; there is no real multi-user online messaging yet.
+- Media and voice recordings are local previews and are not synced between devices.
+- Video circles are local recordings; server delivery/calls are not connected.
+- Premium remains a demo toggle; there are no real payments.
+- NEGRAM AI is temporarily paused by project decision.
 
-Для проверки сначала откройте negram.html локально в браузере. Исходный опубликованный сайт этим архивом автоматически не меняется.
+The original layout and visual design are preserved as the baseline. Do not deploy this build over the live site until it has been tested and the owner explicitly approves deployment.
