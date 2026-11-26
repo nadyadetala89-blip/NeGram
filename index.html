@@ -12,7 +12,7 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
-  <title>NeGram 4.1 DEV — messenger</title>
+  <title>NeGram 4.4 DEV — Telegram UI & Calls</title>
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
@@ -66,6 +66,7 @@
       <div class="top-actions"><span class="demo-label"><i></i> ЛИЧНОЕ ПРОСТРАНСТВО</span><button class="avatar-mini" data-page="profile" aria-label="Профиль">У</button></div>
     </header>
 
+    <div id="incoming-call-banner" class="incoming-call-banner" hidden aria-live="assertive"></div>
     <main id="main-content">
       <section class="page active" id="page-chats">
         <div class="page-heading"><div><p class="eyebrow">ТВОЁ ПРОСТРАНСТВО</p><h1>Сообщения<span class="heading-spark">✦</span></h1><p class="subheading">Твои разговоры. Твои правила.</p></div><button class="icon-button" id="new-chat" aria-label="Новый чат">＋</button></div>
@@ -77,13 +78,26 @@
         <div class="empty-space"><div class="empty-orb"><span>✧</span></div><h3>Твоё пространство начинается здесь</h3><p>Создай личный или групповой чат и общайся с другими аккаунтами через интернет.</p><button class="text-action" id="empty-open">Создать личный чат <span>↗</span></button></div>
       </section>
 
+
+      <section class="page" id="page-contacts">
+        <div class="page-heading"><div><p class="eyebrow">NEGRAM PEOPLE</p><h1>Контакты</h1><p class="subheading">Найди знакомых и начни общение.</p></div><button class="icon-button" id="contacts-add" type="button" aria-label="Найти контакт">＋</button></div>
+        <form class="contacts-search" id="contacts-page-search-form"><span>⌕</span><input id="contacts-page-search" placeholder="Поиск по имени или @нику" autocomplete="off" minlength="2"><button type="submit">Найти</button></form>
+        <div class="contacts-results" id="contacts-page-results"><div class="calls-empty">Здесь появятся найденные пользователи NeGram.</div></div>
+      </section>
+      <section class="page" id="page-calls">
+        <div class="page-heading"><div><p class="eyebrow">NEGRAM CALLS</p><h1>Звонки</h1><p class="subheading">Голосовые и видеозвонки.</p></div><span class="calls-live-dot">● СВЯЗЬ</span></div>
+        <div id="incoming-calls" class="incoming-calls" aria-live="polite"></div>
+        <div class="calls-section-title">Недавние</div><div id="calls-history" class="calls-history"><div class="calls-empty">История звонков появится после первых вызовов.</div></div>
+        <p class="calls-note">Для звонков разреши доступ к микрофону, а для видео — ещё и к камере. Для соединений через некоторые сети потребуется TURN-сервер.</p>
+      </section>
+
       <section class="page" id="page-chat">
         <div class="chat-top"><button class="back-button" data-page="chats">‹</button><div class="chat-avatar small avatar-orbit"><span>✦</span><b class="online-dot"></b></div><div class="chat-top-info"><strong>Тестовый чат</strong><span><i class="online-dot tiny"></i> только на этом устройстве</span></div><div class="chat-head-actions"><button class="icon-button small-icon" id="chat-call-audio" aria-label="Аудиозвонок">☎</button><button class="icon-button small-icon" id="chat-call-video" aria-label="Видеозвонок">▣</button><button class="icon-button small-icon" id="chat-options">•••</button></div></div>
-        <div class="chat-notice"><span>◇</span> NeGram 4.1 · личные и групповые чаты.</div>
+        <div class="chat-notice"><span>◇</span> NeGram · онлайн-переписка</div><div class="typing-indicator" id="typing-indicator" aria-live="polite" hidden></div>
         <div class="messages-area" id="messages-area"><div class="day-divider"><span>СЕГОДНЯ</span></div><div class="welcome-message"><div class="welcome-symbol">N</div><strong>Добро пожаловать в NEGRAM</strong><p>Выбери собеседника и начни настоящую переписку через сервер NeGram.</p></div></div>
         <div class="inline-sticker-tray" id="inline-sticker-tray" hidden><div class="inline-tray-head"><strong>Стикеры NEGRAM</strong><button type="button" id="open-sticker-gallery">Все стикеры ↗</button></div><div class="inline-sticker-list" id="inline-sticker-list"></div></div>
-        <div class="voice-tools" id="voice-tools" hidden><div class="voice-tool-title">ГОЛОСОВОЙ ЭФФЕКТ</div><div class="voice-presets"><button type="button" class="voice-preset active" data-voice="autotune">✨ AutoTune Pop</button><button type="button" class="voice-preset" data-voice="natural">Естественный</button><button type="button" class="voice-preset" data-voice="deep">Deep</button><button type="button" class="voice-preset" data-voice="robot">Robot</button></div><small>AutoTune Pop — демонстрационный эффект обработки голоса.</small></div>
-        <form class="composer" id="message-form"><button type="button" class="attach-button" id="attach-button" aria-label="Фото и видео — скоро">＋</button><input id="media-input" type="file" accept="image/*,video/*" multiple hidden><button type="button" class="composer-tool" id="sticker-toggle" aria-label="Стикеры">✧</button><input id="message-input" maxlength="1000" placeholder="Сообщение…" autocomplete="off"><button type="button" class="composer-tool video-circle-button" id="video-circle-button" aria-label="Видеокружок — скоро">◉</button><button type="button" class="composer-tool mic-tool" id="voice-button" aria-label="Голосовое — скоро">●</button><button class="send-button" type="submit" aria-label="Отправить">↑</button></form>
+        <div class="voice-tools" id="voice-tools" hidden><div class="voice-tool-title">ГОЛОСОВОЙ ЭФФЕКТ</div><div class="voice-presets"><button type="button" class="voice-preset active" data-voice="autotune">✨ AutoTune Pop</button><button type="button" class="voice-preset" data-voice="natural">Естественный</button><button type="button" class="voice-preset" data-voice="deep">Deep</button><button type="button" class="voice-preset" data-voice="robot">Robot</button></div><small id="voice-status" role="status">AutoTune Pop: запиши голос, чтобы применить Pop-обработку. Первые два применения бесплатны.</small><div class="voice-record-row"><span id="voice-record-state">Готово к записи</span><button type="button" id="voice-send-recording">● Записать голос</button></div></div>
+        <form class="composer" id="message-form"><button type="button" class="attach-button" id="attach-button" aria-label="Фото и видео — скоро">＋</button><input id="media-input" type="file" accept="image/*,video/*" multiple hidden><button type="button" class="composer-tool" id="sticker-toggle" aria-label="Стикеры">✧</button><input id="message-input" maxlength="1000" placeholder="Сообщение…" autocomplete="off"><button type="button" class="composer-tool video-circle-button" id="video-circle-button" aria-label="Видеокружок — скоро">◉</button><button type="button" class="composer-tool mic-tool" id="voice-button" aria-label="Голосовое сообщение и AutoTune Pop" title="Голосовое сообщение / AutoTune Pop">●</button><button class="send-button" type="submit" aria-label="Отправить">↑</button></form>
       </section>
 
       <section class="page" id="page-profile">
@@ -157,7 +171,7 @@
 
       <section class="page" id="page-bubbles">
         <div class="page-heading"><div><p class="eyebrow">ПЕРСОНАЛИЗАЦИЯ</p><h1>Пузыри</h1><p class="subheading">Выбери настроение переписки.</p></div><button class="icon-button" data-page="profile">‹</button></div>
-        <div class="bubble-preview"><span class="preview-label">ПРЕДПРОСМОТР</span><div class="preview-bubble incoming">Привет! Это NEGRAM ✦</div><div class="preview-bubble outgoing" id="bubble-preview-out">Выглядит отлично!</div><span class="preview-time">19:42 · прочитано</span></div>
+        <div class="bubble-preview"><span class="preview-label">ПРЕДПРОСМОТР В ЧАТЕ</span><div class="preview-bubble incoming" id="bubble-preview-in">Привет! Как тебе мой новый пузырь? ✨</div><div class="preview-bubble outgoing" id="bubble-preview-out">Выглядит отлично! 💜</div><span class="preview-time">19:42 · ✓✓ прочитано</span></div>
         <div class="section-line"><span>СТИЛЬ СООБЩЕНИЙ</span><span class="line"></span></div>
         <div class="bubble-options" id="bubble-options">
           <button class="bubble-option selected" data-style="glass"><span class="bubble-swatch swatch-glass"></span><span><strong>Crystal Glass</strong><small>Стеклянный блеск</small></span><i>✓</i></button>
@@ -179,6 +193,7 @@
           <button class="bubble-option" data-style="duck"><span class="bubble-swatch swatch-duck">🦆</span><span><strong>Duckling</strong><small>Утёнок и мягкие жёлтые оттенки</small></span><i>✓</i></button>
           <button class="bubble-option" data-style="capybara"><span class="bubble-swatch swatch-capybara">🦫</span><span><strong>Capybara</strong><small>Спокойный тёплый стиль</small></span><i>✓</i></button>
           <button class="bubble-option" data-style="strongcat"><span class="bubble-swatch swatch-strongcat">🐈</span><span><strong>Strong Cat</strong><small>Графит и спортивный акцент</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="catdog"><span class="bubble-swatch swatch-capybara">🐱🐶</span><span><strong>Cat & Dog</strong><small>Парный кошачье-собачий стиль</small></span><i>✓</i></button>
           <button class="bubble-option" data-style="facepalm"><span class="bubble-swatch swatch-facepalm">🤦</span><span><strong>Facepalm Frog</strong><small>Ироничный зелёный стиль</small></span><i>✓</i></button>
           <button class="bubble-option" data-style="pepehearts"><span class="bubble-swatch swatch-pepehearts">💚</span><span><strong>Hearts</strong><small>Сердца и мягкие оттенки</small></span><i>✓</i></button>
           <button class="bubble-option" data-style="pig"><span class="bubble-swatch swatch-pig">🐷</span><span><strong>Pink Pig</strong><small>Розовый и округлый</small></span><i>✓</i></button>
@@ -240,16 +255,16 @@
         <div class="settings-group"><span class="group-label">АККАУНТ</span><button class="setting-row" data-page="profile"><span class="setting-icon violet">◉</span><span><strong>Мой профиль</strong><small>Имя, описание, фотография и данные аккаунта</small></span><b>›</b></button><button class="setting-row" id="switch-account"><span class="setting-icon violet">⇄</span><span><strong>Сменить аккаунт</strong><small>Выйти или войти под другим профилем</small></span><b>›</b></button></div>
         <div class="settings-group" id="phone-security-group"><span class="group-label">БЕЗОПАСНОСТЬ АККАУНТА</span><div class="phone-bind-card"><strong>Номер телефона</strong><p id="phone-bind-status">Номер не привязан. Без заранее подтверждённого номера восстановление через SMS недоступно.</p><form id="phone-bind-form" class="account-edit-fields"><label>Номер телефона<input id="phone-bind-input" type="tel" autocomplete="tel" placeholder="+33… или +7…" required></label><button class="profile-save-button" type="submit">Привязать номер</button></form><small id="phone-bind-note">Для реальной привязки требуется подключённый SMS-провайдер. Сейчас отправка SMS не настроена.</small></div><div class="phone-bind-card password-change-card"><strong>Изменить пароль</strong><p>Для смены пароля подтверди текущий пароль. После смены остальные активные сессии аккаунта будут завершены.</p><form id="change-password-form" class="account-edit-fields"><label>Текущий пароль<input id="current-password" type="password" autocomplete="current-password" required></label><label>Новый пароль<input id="new-password" type="password" minlength="8" autocomplete="new-password" required></label><label>Повтори новый пароль<input id="confirm-new-password" type="password" minlength="8" autocomplete="new-password" required></label><button class="profile-save-button" type="submit">Сменить пароль</button><small id="change-password-status" aria-live="polite"></small></form></div></div>
         <div class="settings-group"><span class="group-label">КОНФИДЕНЦИАЛЬНОСТЬ</span><label class="setting-row setting-toggle-row"><span class="setting-icon blue">◌</span><span><strong>Показывать статус «В сети»</strong><small>Разрешить другим видеть твоё присутствие</small></span><input id="show-online-setting" type="checkbox" checked></label><label class="setting-row setting-toggle-row" data-owner-only><span class="setting-icon violet">👻</span><span><strong>Ghost Plus</strong><small>Скрыть своё присутствие (доступно разработчику)</small></span><input id="ghost-plus-setting" type="checkbox"></label></div>
-        <div class="settings-group" id="developer-settings-group" hidden><span class="group-label">ПАНЕЛЬ РАЗРАБОТЧИКА</span><button class="setting-row" data-page="developer"><span class="setting-icon silver">⌘</span><span><strong>NeGram Developer</strong><small>Онлайн, младшие разработчики и коды подписки</small></span><b>›</b></button></div><div class="settings-group"><span class="group-label">ПРИЛОЖЕНИЕ</span><button class="setting-row" id="install-help"><span class="setting-icon pink">⌂</span><span><strong>Установка на iPhone</strong><small>Добавить NEGRAM на экран «Домой»</small></span><b>›</b></button><button class="setting-row" id="about-button"><span class="setting-icon silver">✦</span><span><strong>О NEGRAM</strong><small>Версия 4.1 DEV · тестовая сборка</small></span><b>›</b></button></div>
+        <div class="settings-group" id="developer-settings-group" hidden><span class="group-label">ПАНЕЛЬ РАЗРАБОТЧИКА</span><button class="setting-row" data-page="developer"><span class="setting-icon silver">⌘</span><span><strong>NeGram Developer</strong><small>Онлайн, младшие разработчики и коды подписки</small></span><b>›</b></button></div><div class="settings-group"><span class="group-label">ПРИЛОЖЕНИЕ</span><button class="setting-row" id="install-help"><span class="setting-icon pink">⌂</span><span><strong>Установка на iPhone</strong><small>Добавить NEGRAM на экран «Домой»</small></span><b>›</b></button><button class="setting-row" id="about-button"><span class="setting-icon silver">✦</span><span><strong>О NEGRAM</strong><small>Версия 4.4 DEV · тестовая сборка</small></span><b>›</b></button></div>
         <p class="settings-foot">NEGRAM <span>•</span> ТВОЁ ПРОСТРАНСТВО</p>
       </section>
     </main>
 
     <nav class="bottom-nav" aria-label="Основная навигация">
+      <button class="nav-item" data-page="contacts"><span class="nav-icon">♙</span><span>Контакты</span></button>
+      <button class="nav-item" data-page="calls"><span class="nav-icon">☎</span><span>Звонки</span></button>
       <button class="nav-item active" data-page="chats"><span class="nav-icon">▤</span><span>Чаты</span></button>
-      <button class="nav-item" id="nav-contacts"><span class="nav-icon">♙</span><span>Контакты</span></button>
       <button class="nav-item" data-page="settings"><span class="nav-icon">⚙</span><span>Настройки</span></button>
-      <button class="nav-item" data-page="profile"><span class="nav-icon">◉</span><span>Профиль</span></button>
     </nav>
   </div>
   <section class="contact-modal" id="contact-modal" hidden aria-modal="true" role="dialog" aria-labelledby="contact-modal-title">
@@ -259,6 +274,13 @@
       <form id="contact-search-form"><input id="contact-search-query" autocomplete="off" placeholder="@username или +7…" maxlength="64" required><button type="submit">Найти</button></form>
       <div id="contact-search-results" class="contact-search-results" aria-live="polite">Введи имя пользователя или номер телефона.</div>
     </div>
+  </section>
+  <section class="call-overlay" id="call-overlay" hidden aria-label="Видеозвонок">
+    <video id="call-remote-video" class="call-remote-video" autoplay playsinline></video>
+    <div class="call-audio-avatar" id="call-audio-avatar">N</div>
+    <div class="call-overlay-top"><span class="call-live-indicator">● NEGRAM CALL</span><strong id="call-peer-name">Собеседник</strong><small id="call-state">Подключение…</small></div>
+    <video id="call-local-video" class="call-local-video" autoplay muted playsinline></video>
+    <div class="call-controls"><button id="call-mute" type="button" aria-label="Выключить микрофон">🎙</button><button id="call-camera" type="button" aria-label="Выключить камеру">▣</button><button id="call-speaker" type="button" aria-label="Переключить звук">◖))</button><button id="call-end" class="call-end" type="button" aria-label="Завершить звонок">☎</button></div>
   </section>
   <div class="toast" id="toast" role="status"></div>
   <script src="config.js"></script>
