@@ -1,7 +1,7 @@
 {
-  "name": "NeGram 3.0 — семейный мессенджер",
+  "name": "NeGram 4.0 — messenger",
   "short_name": "NeGram",
-  "description": "Семейный мессенджер с онлайн-чатами",
+  "description": "Мессенджер с онлайн-чатами и настройкой профиля",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
