@@ -12,7 +12,7 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
-  <title>NeGram 4.0 — messenger</title>
+  <title>NeGram 4.1 DEV — messenger</title>
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
@@ -28,6 +28,23 @@
         <label>Пароль<input id="login-password" type="password" autocomplete="current-password" placeholder="Твой пароль" required></label>
         <button class="auth-submit" type="submit">Войти в NEGRAM <span>↗</span></button>
       </form>
+      <div class="auth-recovery-link"><button type="button" id="open-recovery">Забыли пароль?</button></div>
+      <section id="recovery-panel" class="recovery-panel" hidden>
+        <div class="recovery-head"><strong>Восстановление аккаунта</strong><button type="button" id="close-recovery" aria-label="Закрыть">×</button></div>
+        <div class="recovery-methods"><button type="button" class="recovery-method active" data-recovery="developer">По коду (для разработчика)</button><button type="button" class="recovery-method" data-recovery="phone">По номеру телефона</button></div>
+        <form id="developer-recovery-form" class="auth-form recovery-form">
+          <label>Имя аккаунта разработчика<input id="recovery-dev-username" autocomplete="username" value="negramdev" required></label>
+          <label>Новый пароль<input id="recovery-dev-password" type="password" minlength="8" autocomplete="new-password" placeholder="Не менее 8 символов" required></label>
+          <label>RESET_SECRET<input id="recovery-dev-secret" type="password" autocomplete="off" placeholder="Секрет из Cloudflare" required></label>
+          <button class="auth-submit" type="submit">Восстановить аккаунт</button>
+        </form>
+        <form id="phone-recovery-form" class="auth-form recovery-form" hidden>
+          <label>Привязанный номер телефона<input id="recovery-phone" type="tel" autocomplete="tel" placeholder="+7…" required></label>
+          <button class="auth-submit" type="submit">Получить SMS-код</button>
+          <p class="recovery-note">SMS-восстановление станет доступно после подключения и проверки SMS-провайдера. Если номер заранее не привязан, восстановить аккаунт по телефону нельзя.</p>
+        </form>
+        <p id="recovery-status" class="auth-error" aria-live="polite"></p>
+      </section>
       <form id="register-form" class="auth-form" hidden>
         <label>Как тебя называть<input id="register-name" maxlength="32" autocomplete="name" placeholder="Имя" required></label>
         <label>Имя пользователя<input id="register-username" maxlength="24" autocomplete="username" autocapitalize="none" placeholder="латиница, цифры и _" required></label>
@@ -61,7 +78,7 @@
 
       <section class="page" id="page-chat">
         <div class="chat-top"><button class="back-button" data-page="chats">‹</button><div class="chat-avatar small avatar-orbit"><span>✦</span><b class="online-dot"></b></div><div class="chat-top-info"><strong>Тестовый чат</strong><span><i class="online-dot tiny"></i> только на этом устройстве</span></div><div class="chat-head-actions"><button class="icon-button small-icon" id="chat-call-audio" aria-label="Аудиозвонок">☎</button><button class="icon-button small-icon" id="chat-call-video" aria-label="Видеозвонок">▣</button><button class="icon-button small-icon" id="chat-options">•••</button></div></div>
-        <div class="chat-notice"><span>◇</span> NeGram 4.0 · личные и групповые чаты.</div>
+        <div class="chat-notice"><span>◇</span> NeGram 4.1 · личные и групповые чаты.</div>
         <div class="messages-area" id="messages-area"><div class="day-divider"><span>СЕГОДНЯ</span></div><div class="welcome-message"><div class="welcome-symbol">N</div><strong>Добро пожаловать в NEGRAM</strong><p>Выбери собеседника и начни настоящую переписку через сервер NeGram.</p></div></div>
         <div class="inline-sticker-tray" id="inline-sticker-tray" hidden><div class="inline-tray-head"><strong>Стикеры NEGRAM</strong><button type="button" id="open-sticker-gallery">Все стикеры ↗</button></div><div class="inline-sticker-list" id="inline-sticker-list"></div></div>
         <div class="voice-tools" id="voice-tools" hidden><div class="voice-tool-title">ГОЛОСОВОЙ ЭФФЕКТ</div><div class="voice-presets"><button type="button" class="voice-preset active" data-voice="autotune">✨ AutoTune Pop</button><button type="button" class="voice-preset" data-voice="natural">Естественный</button><button type="button" class="voice-preset" data-voice="deep">Deep</button><button type="button" class="voice-preset" data-voice="robot">Robot</button></div><small>AutoTune Pop — демонстрационный эффект обработки голоса.</small></div>
@@ -88,6 +105,13 @@
         <div class="page-heading"><div><p class="eyebrow">ЭМОЦИИ БЕЗ СЛОВ</p><h1>NEGRAM эмоции</h1><p class="subheading">Наши собственные живые персонажи.</p></div><span class="sticker-count">01 / 08</span></div>
         <div class="sticker-feature sticker-feature-live"><div class="sticker-feature-orb"><span class="feature-spark">✦</span><span class="feature-face">N</span></div><div><span class="eyebrow">NEGRAM STUDIO · SERIES 01</span><h2>Маленькие эмоции. Большой характер.</h2><p>Оригинальные персонажи NEGRAM. Сетевая отправка стикеров подключается отдельно.</p></div></div>
         <div class="sticker-toolbar"><span>КОЛЛЕКЦИЯ · 20 СТИКЕРОВ</span><span class="live-indicator"><i></i> АНИМАЦИЯ</span></div>
+        <div class="emoji-pack-tabs" role="tablist" aria-label="Наборы Emoji">
+          <button type="button" class="emoji-pack-tab active" data-pack="crayon">🖍 Crayon</button>
+          <button type="button" class="emoji-pack-tab" data-pack="kawaii">🌸 Kawaii</button>
+          <button type="button" class="emoji-pack-tab" data-pack="emoticon">☺ Emoticon</button>
+        </div>
+        <div id="emoji-pack-grid" class="emoji-pack-grid" aria-live="polite"></div>
+        <p class="pack-footnote">Это встроенные наборы символов и анимированные превью. Авторские графические стикеры и синхронизация изображений между пользователями требуют отдельного медиахранилища.</p>
         <div class="sticker-collection" id="sticker-collection">
           <button class="sticker-card" data-sticker="pulse"><span class="sticker-art art-pulse"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><radialGradient id="gPulse" cx="32%" cy="24%"><stop stop-color="#f4eaff"/><stop offset=".35" stop-color="#bd9aff"/><stop offset="1" stop-color="#6245d7"/></radialGradient></defs><circle cx="60" cy="61" r="43" fill="url(#gPulse)"/><path d="M28 48Q38 17 72 22" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="5" stroke-linecap="round"/><ellipse cx="46" cy="58" rx="5" ry="7" fill="#211743"/><ellipse cx="74" cy="58" rx="5" ry="7" fill="#211743"/><path d="M47 76Q60 88 74 75" fill="none" stroke="#34205e" stroke-width="4" stroke-linecap="round"/><path d="M20 32l5-8m70 11 7-6" stroke="#d8c4ff" stroke-width="3" stroke-linecap="round"/></svg></span><strong>Пульс</strong><small>Радость</small></button>
           <button class="sticker-card" data-sticker="wisp"><span class="sticker-art art-wisp"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="gWisp" x2=".9" y2="1"><stop stop-color="#fff"/><stop offset=".55" stop-color="#c9c2ff"/><stop offset="1" stop-color="#7b8eff"/></linearGradient></defs><path d="M60 18C38 18 27 37 29 62l-4 28q10-8 18 0 9-11 18 0 9-11 18 0 8-8 16 0l-4-28C93 37 82 18 60 18Z" fill="url(#gWisp)" stroke="#fff" stroke-opacity=".8" stroke-width="2"/><ellipse cx="48" cy="58" rx="4" ry="7" fill="#35305d"/><ellipse cx="71" cy="58" rx="4" ry="7" fill="#35305d"/><path d="M51 72q9 8 18 0" fill="none" stroke="#625a9b" stroke-width="3" stroke-linecap="round"/><circle cx="90" cy="28" r="5" fill="#b7a5ff"/></svg></span><strong>Висп</strong><small>Привет</small></button>
@@ -158,6 +182,15 @@
           <button class="bubble-option" data-style="pepehearts"><span class="bubble-swatch swatch-pepehearts">💚</span><span><strong>Hearts</strong><small>Сердца и мягкие оттенки</small></span><i>✓</i></button>
           <button class="bubble-option" data-style="pig"><span class="bubble-swatch swatch-pig">🐷</span><span><strong>Pink Pig</strong><small>Розовый и округлый</small></span><i>✓</i></button>
           <button class="bubble-option" data-style="shark"><span class="bubble-swatch swatch-shark">🦈</span><span><strong>Shark</strong><small>Морской сине-серый стиль</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="heartpepe"><span class="bubble-swatch swatch-pepehearts">💚</span><span><strong>Heart Pepe</strong><small>Фигурный вариант с сердцами</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="pigshark"><span class="bubble-swatch swatch-shark">🐷</span><span><strong>Pig Shark</strong><small>Персонажный вариант</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="doge"><span class="bubble-swatch swatch-capybara">🐕</span><span><strong>Doge</strong><small>Собачий персонажный стиль</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="dino"><span class="bubble-swatch swatch-frog">🦖</span><span><strong>Dino</strong><small>Динозавр</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="tonguebear"><span class="bubble-swatch swatch-rose">🐻</span><span><strong>Tongue Bear</strong><small>Медвежонок</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="frogchick"><span class="bubble-swatch swatch-duck">🐸</span><span><strong>Frog Chick</strong><small>Лягушка и цыплёнок</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="dachshund"><span class="bubble-swatch swatch-capybara">🐕</span><span><strong>Dachshund</strong><small>Такса</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="hungrydog"><span class="bubble-swatch swatch-rose">🐶</span><span><strong>Hungry Dog</strong><small>Голодный пёс</small></span><i>✓</i></button>
+          <button class="bubble-option" data-style="excitedpepe"><span class="bubble-swatch swatch-frog">🐸</span><span><strong>Excited Pepe</strong><small>Эмоциональная лягушка</small></span><i>✓</i></button>
         </div>
       </section>
 
@@ -204,8 +237,9 @@
         <div class="settings-group"><span class="group-label">ВНЕШНИЙ ВИД</span><button class="setting-row" data-page="bubbles"><span class="setting-icon violet">▱</span><span><strong>Пузыри сообщений</strong><small>Стиль и внешний вид</small></span><b>›</b></button><button class="setting-row" id="theme-toggle"><span class="setting-icon blue">☼</span><span><strong>Свечение интерфейса</strong><small>Мягкие акценты NEGRAM</small></span><span class="toggle on" id="glow-toggle"></span></button></div>
         <div class="settings-group"><span class="group-label">ПЕРСОНАЛИЗАЦИЯ</span><button class="setting-row" data-page="themes"><span class="setting-icon violet">✧</span><span><strong>Темы оформления</strong><small>Цвета и атмосфера приложения</small></span><b>›</b></button><button class="setting-row" data-page="premium"><span class="setting-icon silver">✦</span><span><strong>NeGram +</strong><small>Подписка и дополнительные возможности</small></span><b>›</b></button></div>
         <div class="settings-group"><span class="group-label">АККАУНТ</span><button class="setting-row" data-page="profile"><span class="setting-icon violet">◉</span><span><strong>Мой профиль</strong><small>Имя, описание, фотография и данные аккаунта</small></span><b>›</b></button><button class="setting-row" id="switch-account"><span class="setting-icon violet">⇄</span><span><strong>Сменить аккаунт</strong><small>Выйти или войти под другим профилем</small></span><b>›</b></button></div>
+        <div class="settings-group" id="phone-security-group"><span class="group-label">БЕЗОПАСНОСТЬ АККАУНТА</span><div class="phone-bind-card"><strong>Номер телефона</strong><p id="phone-bind-status">Номер не привязан. Без заранее подтверждённого номера восстановление через SMS недоступно.</p><form id="phone-bind-form" class="account-edit-fields"><label>Номер телефона<input id="phone-bind-input" type="tel" autocomplete="tel" placeholder="+33… или +7…" required></label><button class="profile-save-button" type="submit">Привязать номер</button></form><small id="phone-bind-note">Для реальной привязки требуется подключённый SMS-провайдер. Сейчас отправка SMS не настроена.</small></div></div>
         <div class="settings-group"><span class="group-label">КОНФИДЕНЦИАЛЬНОСТЬ</span><label class="setting-row setting-toggle-row"><span class="setting-icon blue">◌</span><span><strong>Показывать статус «В сети»</strong><small>Разрешить другим видеть твоё присутствие</small></span><input id="show-online-setting" type="checkbox" checked></label><label class="setting-row setting-toggle-row" data-owner-only><span class="setting-icon violet">👻</span><span><strong>Ghost Plus</strong><small>Скрыть своё присутствие (доступно разработчику)</small></span><input id="ghost-plus-setting" type="checkbox"></label></div>
-        <div class="settings-group" id="developer-settings-group" hidden><span class="group-label">ПАНЕЛЬ РАЗРАБОТЧИКА</span><button class="setting-row" data-page="developer"><span class="setting-icon silver">⌘</span><span><strong>NeGram Developer</strong><small>Онлайн, младшие разработчики и коды подписки</small></span><b>›</b></button></div><div class="settings-group"><span class="group-label">ПРИЛОЖЕНИЕ</span><button class="setting-row" id="install-help"><span class="setting-icon pink">⌂</span><span><strong>Установка на iPhone</strong><small>Добавить NEGRAM на экран «Домой»</small></span><b>›</b></button><button class="setting-row" id="about-button"><span class="setting-icon silver">✦</span><span><strong>О NEGRAM</strong><small>Версия 4.0 · тестовая сборка</small></span><b>›</b></button></div>
+        <div class="settings-group" id="developer-settings-group" hidden><span class="group-label">ПАНЕЛЬ РАЗРАБОТЧИКА</span><button class="setting-row" data-page="developer"><span class="setting-icon silver">⌘</span><span><strong>NeGram Developer</strong><small>Онлайн, младшие разработчики и коды подписки</small></span><b>›</b></button></div><div class="settings-group"><span class="group-label">ПРИЛОЖЕНИЕ</span><button class="setting-row" id="install-help"><span class="setting-icon pink">⌂</span><span><strong>Установка на iPhone</strong><small>Добавить NEGRAM на экран «Домой»</small></span><b>›</b></button><button class="setting-row" id="about-button"><span class="setting-icon silver">✦</span><span><strong>О NEGRAM</strong><small>Версия 4.1 DEV · тестовая сборка</small></span><b>›</b></button></div>
         <p class="settings-foot">NEGRAM <span>•</span> ТВОЁ ПРОСТРАНСТВО</p>
       </section>
     </main>

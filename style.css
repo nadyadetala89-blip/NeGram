@@ -133,3 +133,48 @@ body.logged-out .auth-screen{display:flex}body.logged-out .app-shell,body.logged
 body[data-bubble="tiktok"] .message{border-radius:20px 20px 20px 6px;box-shadow:0 6px 18px #0003;font-weight:520;max-width:min(78%,420px)}body[data-bubble="tiktok"] .message.outgoing{border-radius:20px 20px 6px 20px;background:linear-gradient(135deg,#7a5cff,#b14bdb);border:1px solid #ffffff26}body[data-bubble="tiktok"] .message.incoming{background:#24232e;border:1px solid #ffffff13}body[data-bubble="tiktok"] .message.outgoing:after{content:"";position:absolute;right:-4px;bottom:0;width:10px;height:10px;background:#a35ae8;clip-path:polygon(0 0,100% 100%,0 100%)}
 body[data-bubble="cartoon"] .message{border:2px solid #f5eaff;border-radius:24px;box-shadow:3px 4px 0 #0005}body[data-bubble="cartoon"] .message.outgoing{background:#8265d9}body[data-bubble="roblox"] .message.outgoing{background:linear-gradient(135deg,#fa6bc4,#785bff);border:1px solid #ffd9f5;box-shadow:0 0 15px #e77ce955}body[data-bubble="frog"] .message.outgoing{background:linear-gradient(135deg,#5aab62,#246b55);border-radius:22px 22px 5px 22px}body[data-bubble="duck"] .message.outgoing{background:linear-gradient(135deg,#ffe28a,#c78c34);color:#382817}body[data-bubble="capybara"] .message.outgoing{background:linear-gradient(135deg,#b88b64,#76543e);border-radius:23px}body[data-bubble="strongcat"] .message.outgoing{background:linear-gradient(135deg,#555e6d,#202633);border:1px solid #9aa8bb}body[data-bubble="facepalm"] .message.outgoing{background:linear-gradient(135deg,#80c878,#3c7950)}body[data-bubble="pepehearts"] .message.outgoing{background:linear-gradient(135deg,#a8e7ae,#398b65);color:#102d1e}body[data-bubble="pig"] .message.outgoing{background:linear-gradient(135deg,#ffbfd2,#d96f98);color:#4d1830}body[data-bubble="shark"] .message.outgoing{background:linear-gradient(135deg,#6ca9c8,#315a7b)}
 @media(max-width:600px){.chat-head-actions{gap:3px}.chat-head-actions .icon-button{min-width:34px;padding:7px}.account-edit-fields{gap:9px}}
+
+
+/* NeGram 4.1 DEV — Telegram-inspired information architecture, preserving NeGram palette */
+@media(min-width:900px){
+ .app-shell{width:100%;max-width:1440px;min-height:100dvh;padding:0 24px 24px;display:grid;grid-template-columns: minmax(310px,390px) minmax(0,1fr);grid-template-rows:64px 1fr;column-gap:18px}
+ .topbar{grid-column:1 / -1;height:64px;padding:0 6px}
+ #main-content{display:contents}
+ #page-chats{display:none!important}
+ #page-chat{display:none!important}
+ #page-chats.active,#page-chat.active{display:flex!important;flex-direction:column;min-height:calc(100dvh - 100px);padding:16px;border:1px solid var(--line);border-radius:18px;background:rgba(20,18,39,.88);overflow:hidden}
+ #page-chats.active{grid-column:1;grid-row:2}
+ #page-chat.active{grid-column:2;grid-row:2}
+ .bottom-nav{position:fixed;left:24px;top:82px;bottom:auto;transform:none;width:62px;padding:10px 5px;border:1px solid var(--line);border-radius:17px;display:flex;flex-direction:column;gap:14px;background:rgba(13,11,29,.94)}
+ .app-shell{padding-left:100px}
+ .messages-area{flex:1;height:auto;max-height:none;min-height:320px}
+ .chat-top{position:sticky;top:0;padding:5px 0 12px;border-bottom:1px solid var(--line)}
+ .network-chat-card{border-radius:12px;padding:11px;background:rgba(255,255,255,.035);box-shadow:none}
+ .network-chat-list{gap:4px;overflow:auto}
+ .page-heading{margin-bottom:14px}
+}
+@media(max-width:899px){.app-shell{width:100%;max-width:760px}.page{padding-top:22px}}
+.network-chat-card{border-radius:14px;box-shadow:none}.network-chat-card:hover{background:rgba(130,105,205,.14);border-color:rgba(190,170,255,.3)}
+.bottom-nav{border-radius:0}.page-heading h1{letter-spacing:-.7px}
+.auth-recovery-link{text-align:center;margin-top:12px}.auth-recovery-link button{border:0;background:none;color:#cbb7ff;font-size:11px;font-weight:800}
+.recovery-panel{margin-top:14px;padding:14px;border:1px solid rgba(190,170,255,.2);border-radius:16px;background:rgba(25,22,49,.96)}.recovery-panel[hidden]{display:none}.recovery-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.recovery-head strong{font-size:13px}.recovery-head button{border:0;background:transparent;color:#fff;font-size:22px}.recovery-methods{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}.recovery-method{padding:10px 7px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.04);font-size:10px;color:#c9c1db}.recovery-method.active{border-color:#a98cff;background:rgba(169,140,255,.16);color:#fff}.recovery-form{margin-top:10px}.recovery-note{font-size:9px;line-height:1.55;color:#aaa1c3}.phone-bind-card{padding:13px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025)}.phone-bind-card strong{font-size:12px}.phone-bind-card p,.phone-bind-card small{font-size:10px;line-height:1.55;color:var(--muted)}
+.emoji-pack-tabs{display:flex;gap:8px;overflow:auto;padding:3px 0 10px}.emoji-pack-tab{white-space:nowrap;padding:9px 13px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.04);font-size:10px;color:#c7bddb}.emoji-pack-tab.active{background:rgba(169,140,255,.2);border-color:#a98cff;color:#fff}.emoji-pack-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}.emoji-pack-item{min-height:86px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035)}.emoji-pack-face{font-size:30px;animation:faceBob 2s ease-in-out infinite}.emoji-pack-item small{font-size:9px;color:#a99fbd}.pack-footnote{font-size:9px;line-height:1.55;color:#8f88a7;margin:12px 0 18px}
+/* Character-inspired bubble variants: distinct shape and decoration, not claimed as pixel-identical TikTok assets. */
+body[data-bubble="heartpepe"] .message.outgoing,body[data-bubble="pepehearts"] .message.outgoing{background:linear-gradient(145deg,#b9efb2,#3e9869);color:#173b29;border-radius:22px 22px 7px 22px}
+body[data-bubble="pigshark"] .message.outgoing{background:linear-gradient(145deg,#ffc5d9,#72b7d3);color:#38263c;border-radius:22px 8px 22px 22px}
+body[data-bubble="doge"] .message.outgoing{background:linear-gradient(145deg,#f3d9a0,#b9824f);color:#3e281b;border-radius:24px 24px 8px 24px}
+body[data-bubble="dino"] .message.outgoing{background:linear-gradient(145deg,#9be3a4,#397e61);border-radius:24px 24px 7px 24px}
+body[data-bubble="tonguebear"] .message.outgoing{background:linear-gradient(145deg,#eac4a8,#a96d63);color:#422b28;border-radius:24px 24px 7px 24px}
+body[data-bubble="frogchick"] .message.outgoing{background:linear-gradient(145deg,#c7e78c,#f4d978);color:#3c421c;border-radius:24px 8px 24px 24px}
+body[data-bubble="dachshund"] .message.outgoing{background:linear-gradient(145deg,#d9a16d,#885b3c);border-radius:24px 24px 7px 24px}
+body[data-bubble="hungrydog"] .message.outgoing{background:linear-gradient(145deg,#ffe1a0,#d69b59);color:#473019;border-radius:24px 24px 7px 24px}
+body[data-bubble="excitedpepe"] .message.outgoing{background:linear-gradient(145deg,#a8e8a7,#4d9d70);color:#173a28;border-radius:24px 24px 7px 24px}
+body[data-bubble="heartpepe"] .preview-bubble.outgoing,body[data-bubble="pepehearts"] .preview-bubble.outgoing{background:linear-gradient(145deg,#b9efb2,#3e9869);color:#173b29;border-radius:22px 22px 7px 22px}
+body[data-bubble="pigshark"] .preview-bubble.outgoing{background:linear-gradient(145deg,#ffc5d9,#72b7d3);color:#38263c;border-radius:22px 8px 22px 22px}
+body[data-bubble="doge"] .preview-bubble.outgoing{background:linear-gradient(145deg,#f3d9a0,#b9824f);color:#3e281b;border-radius:24px 24px 8px 24px}
+body[data-bubble="dino"] .preview-bubble.outgoing{background:linear-gradient(145deg,#9be3a4,#397e61);border-radius:24px 24px 7px 24px}
+body[data-bubble="tonguebear"] .preview-bubble.outgoing{background:linear-gradient(145deg,#eac4a8,#a96d63);color:#422b28;border-radius:24px 24px 7px 24px}
+body[data-bubble="frogchick"] .preview-bubble.outgoing{background:linear-gradient(145deg,#c7e78c,#f4d978);color:#3c421c;border-radius:24px 8px 24px 24px}
+body[data-bubble="dachshund"] .preview-bubble.outgoing{background:linear-gradient(145deg,#d9a16d,#885b3c);border-radius:24px 24px 7px 24px}
+body[data-bubble="hungrydog"] .preview-bubble.outgoing{background:linear-gradient(145deg,#ffe1a0,#d69b59);color:#473019;border-radius:24px 24px 7px 24px}
+body[data-bubble="excitedpepe"] .preview-bubble.outgoing{background:linear-gradient(145deg,#a8e8a7,#4d9d70);color:#173a28;border-radius:24px 24px 7px 24px}
