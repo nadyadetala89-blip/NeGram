@@ -12,7 +12,7 @@
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="stylesheet" href="style.css">
-  <title>NeGram 2.1 — семейный мессенджер</title>
+  <title>NeGram 3.0 — семейный мессенджер</title>
 </head>
 <body>
   <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
@@ -53,16 +53,16 @@
       <section class="page active" id="page-chats">
         <div class="page-heading"><div><p class="eyebrow">ТВОЁ ПРОСТРАНСТВО</p><h1>Сообщения<span class="heading-spark">✦</span></h1><p class="subheading">Твои разговоры. Твои правила.</p></div><button class="icon-button" id="new-chat" aria-label="Новый чат">＋</button></div>
         <div class="search-wrap"><span>⌕</span><input id="search-input" type="search" placeholder="Поиск по чатам" autocomplete="off"></div>
-        <div class="section-line"><span>ЗАКРЕПЛЁННОЕ</span><span class="line"></span><span class="tiny-count">02</span></div>
+        <div class="section-line"><span>ТВОИ ЧАТЫ</span><span class="line"></span><span class="tiny-count">02</span></div>
         <div id="network-chat-list" class="network-chat-list" aria-live="polite"></div>
-        <button class="text-action" id="new-group" type="button" style="margin-top:14px">＋ Создать групповой чат</button>
+        <div class="chat-actions-row"><button class="text-action" id="open-contacts" type="button">⌕ Найти пользователя</button><button class="text-action" id="new-group" type="button">＋ Групповой чат</button></div>
         <div class="empty-space"><div class="empty-orb"><span>✧</span></div><h3>Твоё пространство начинается здесь</h3><p>Создай личный или групповой чат и общайся с другими аккаунтами через интернет.</p><button class="text-action" id="empty-open">Создать личный чат <span>↗</span></button></div>
       </section>
 
       <section class="page" id="page-chat">
         <div class="chat-top"><button class="back-button" data-page="chats">‹</button><div class="chat-avatar small avatar-orbit"><span>✦</span><b class="online-dot"></b></div><div class="chat-top-info"><strong>Тестовый чат</strong><span><i class="online-dot tiny"></i> только на этом устройстве</span></div><button class="icon-button small-icon" id="chat-options">•••</button></div>
-        <div class="chat-notice"><span>◇</span> Сообщения передаются через сервер NeGram. В этой сборке онлайн поддерживает текстовые сообщения.</div>
-        <div class="messages-area" id="messages-area"><div class="day-divider"><span>СЕГОДНЯ</span></div><div class="welcome-message"><div class="welcome-symbol">N</div><strong>Добро пожаловать в NEGRAM</strong><p>Это твой тестовый чат. Напиши что-нибудь внизу — сообщение появится здесь.</p></div></div>
+        <div class="chat-notice"><span>◇</span> NeGram 3.0 · сообщения синхронизируются через сервер.</div>
+        <div class="messages-area" id="messages-area"><div class="day-divider"><span>СЕГОДНЯ</span></div><div class="welcome-message"><div class="welcome-symbol">N</div><strong>Добро пожаловать в NEGRAM</strong><p>Выбери собеседника и начни настоящую переписку через сервер NeGram.</p></div></div>
         <div class="inline-sticker-tray" id="inline-sticker-tray" hidden><div class="inline-tray-head"><strong>Стикеры NEGRAM</strong><button type="button" id="open-sticker-gallery">Все стикеры ↗</button></div><div class="inline-sticker-list" id="inline-sticker-list"></div></div>
         <div class="voice-tools" id="voice-tools" hidden><div class="voice-tool-title">ГОЛОСОВОЙ ЭФФЕКТ</div><div class="voice-presets"><button type="button" class="voice-preset active" data-voice="autotune">✨ AutoTune Pop</button><button type="button" class="voice-preset" data-voice="natural">Естественный</button><button type="button" class="voice-preset" data-voice="deep">Deep</button><button type="button" class="voice-preset" data-voice="robot">Robot</button></div><small>AutoTune Pop — демонстрационный эффект обработки голоса.</small></div>
         <form class="composer" id="message-form"><button type="button" class="attach-button" id="attach-button" aria-label="Фото и видео — скоро">＋</button><input id="media-input" type="file" accept="image/*,video/*" multiple hidden><button type="button" class="composer-tool" id="sticker-toggle" aria-label="Стикеры">✧</button><input id="message-input" maxlength="1000" placeholder="Сообщение…" autocomplete="off"><button type="button" class="composer-tool video-circle-button" id="video-circle-button" aria-label="Видеокружок — скоро">◉</button><button type="button" class="composer-tool mic-tool" id="voice-button" aria-label="Голосовое — скоро">●</button><button class="send-button" type="submit" aria-label="Отправить">↑</button></form>
@@ -80,12 +80,12 @@
           <div class="preset-title">Готовые обложки</div><div class="preset-cover-grid" id="preset-covers"></div>
         </div>
         <div class="settings-list"><button class="setting-row" data-page="settings"><span class="setting-icon violet">◈</span><span><strong>Настройки профиля</strong><small>Имя, описание и оформление</small></span><b>›</b></button><button class="setting-row" data-page="bubbles"><span class="setting-icon blue">▱</span><span><strong>Пузыри сообщений</strong><small>Выбери стиль переписки</small></span><b>›</b></button></div>
-        <button class="premium-shortcut" data-page="premium"><span class="premium-shortcut-icon">✦</span><span><strong>NEGRAM Premium</strong><small>Эксклюзивное оформление и возможности</small></span><b>›</b></button>
+        <button class="premium-shortcut" data-page="premium"><span class="premium-shortcut-icon">✦</span><span><strong>NeGram +</strong><small>Эксклюзивное оформление и возможности</small></span><b>›</b></button>
       </section>
 
       <section class="page" id="page-stickers">
         <div class="page-heading"><div><p class="eyebrow">ЭМОЦИИ БЕЗ СЛОВ</p><h1>NEGRAM эмоции</h1><p class="subheading">Наши собственные живые персонажи.</p></div><span class="sticker-count">01 / 08</span></div>
-        <div class="sticker-feature sticker-feature-live"><div class="sticker-feature-orb"><span class="feature-spark">✦</span><span class="feature-face">N</span></div><div><span class="eyebrow">NEGRAM STUDIO · SERIES 01</span><h2>Маленькие эмоции. Большой характер.</h2><p>Нажми на стикер, чтобы отправить его в тестовый чат. Это оригинальные персонажи NEGRAM.</p></div></div>
+        <div class="sticker-feature sticker-feature-live"><div class="sticker-feature-orb"><span class="feature-spark">✦</span><span class="feature-face">N</span></div><div><span class="eyebrow">NEGRAM STUDIO · SERIES 01</span><h2>Маленькие эмоции. Большой характер.</h2><p>Оригинальные персонажи NEGRAM. Сетевая отправка стикеров подключается отдельно.</p></div></div>
         <div class="sticker-toolbar"><span>КОЛЛЕКЦИЯ · 20 СТИКЕРОВ</span><span class="live-indicator"><i></i> АНИМАЦИЯ</span></div>
         <div class="sticker-collection" id="sticker-collection">
           <button class="sticker-card" data-sticker="pulse"><span class="sticker-art art-pulse"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><radialGradient id="gPulse" cx="32%" cy="24%"><stop stop-color="#f4eaff"/><stop offset=".35" stop-color="#bd9aff"/><stop offset="1" stop-color="#6245d7"/></radialGradient></defs><circle cx="60" cy="61" r="43" fill="url(#gPulse)"/><path d="M28 48Q38 17 72 22" fill="none" stroke="#fff" stroke-opacity=".65" stroke-width="5" stroke-linecap="round"/><ellipse cx="46" cy="58" rx="5" ry="7" fill="#211743"/><ellipse cx="74" cy="58" rx="5" ry="7" fill="#211743"/><path d="M47 76Q60 88 74 75" fill="none" stroke="#34205e" stroke-width="4" stroke-linecap="round"/><path d="M20 32l5-8m70 11 7-6" stroke="#d8c4ff" stroke-width="3" stroke-linecap="round"/></svg></span><strong>Пульс</strong><small>Радость</small></button>
@@ -110,7 +110,7 @@
           <button class="sticker-card extra-sticker" data-sticker="trophy"><span class="sticker-art extra-art trophy-art">🏆</span><strong>Топ</strong><small>Победа</small></button>
 
         </div>
-        <p class="sticker-hint">Нажми на персонажа — он отправится в твой тестовый чат. Анимация работает прямо в NEGRAM.</p>
+        <p class="sticker-hint">Анимация работает прямо в NEGRAM. Сетевая отправка стикеров будет подключена после файлового хранилища.</p>
         <div class="sticker-studio-card"><div><span class="eyebrow">NEGRAM STICKER LAB · PREMIUM</span><h2>Создай свой стикер</h2><p>Загрузи фото, добавь подпись и сохрани в личную коллекцию.</p></div><button class="studio-add" id="studio-add">＋ Добавить</button><input id="sticker-photo-input" type="file" accept="image/*" hidden><div class="sticker-editor" id="sticker-editor" hidden><img id="sticker-source-preview" alt="Предпросмотр стикера"><input id="sticker-caption" maxlength="28" placeholder="Текст на стикере"><div class="editor-actions"><button id="sticker-cancel" type="button">Отмена</button><button id="sticker-save" type="button">Сохранить</button></div></div><div class="my-stickers" id="my-stickers"><span class="my-stickers-empty">Твои стикеры появятся здесь</span></div></div>
         <div class="section-line"><span>50 ЖИВЫХ ЛИЦ</span><span class="line"></span><span class="tiny-count">0.8</span></div>
         <div class="animated-faces-grid" id="animated-faces-grid"></div>
@@ -161,7 +161,7 @@
       </section>
 
       <section class="page" id="page-premium">
-        <div class="page-heading"><div><p class="eyebrow">БОЛЬШЕ ВОЗМОЖНОСТЕЙ</p><h1>NEGRAM <span class="premium-word">PREMIUM</span></h1><p class="subheading">Расширь своё пространство.</p></div><button class="icon-button" data-page="profile">‹</button></div>
+        <div class="page-heading"><div><p class="eyebrow">БОЛЬШЕ ВОЗМОЖНОСТЕЙ</p><h1>NeGram <span class="premium-word">+</span></h1><p class="subheading">Расширь своё пространство.</p></div><button class="icon-button" data-page="profile">‹</button></div>
         <div class="premium-hero"><div class="premium-orb">✦</div><span class="premium-kicker">NEGRAM MEMBERSHIP</span><h2>Твой стиль.<br>Без ограничений.</h2><p>Больше персонализации и эксклюзивных возможностей в одном пространстве.</p><div class="premium-shine"></div></div>
         <div class="premium-status-row"><span id="premium-status">PREMIUM НЕ ПОДКЛЮЧЁН</span><span class="premium-status-dot"></span></div>
         <div class="premium-benefits">
@@ -179,14 +179,22 @@
       <section class="page" id="page-settings">
         <div class="page-heading"><div><p class="eyebrow">ВСЁ ПОД КОНТРОЛЕМ</p><h1>Настройки</h1><p class="subheading">Настрой NEGRAM под себя.</p></div></div>
         <div class="settings-group"><span class="group-label">ВНЕШНИЙ ВИД</span><button class="setting-row" data-page="bubbles"><span class="setting-icon violet">▱</span><span><strong>Пузыри сообщений</strong><small>Стиль и внешний вид</small></span><b>›</b></button><button class="setting-row" id="theme-toggle"><span class="setting-icon blue">☼</span><span><strong>Свечение интерфейса</strong><small>Мягкие акценты NEGRAM</small></span><span class="toggle on" id="glow-toggle"></span></button></div>
-        <div class="settings-group"><span class="group-label">ПЕРСОНАЛИЗАЦИЯ</span><button class="setting-row" data-page="themes"><span class="setting-icon violet">✧</span><span><strong>Темы оформления</strong><small>Цвета и атмосфера приложения</small></span><b>›</b></button><button class="setting-row" data-page="premium"><span class="setting-icon silver">✦</span><span><strong>NEGRAM Premium</strong><small>Подписка и дополнительные возможности</small></span><b>›</b></button></div>
-        <div class="settings-group"><span class="group-label">АККАУНТ</span><button class="setting-row" id="switch-account"><span class="setting-icon violet">⇄</span><span><strong>Сменить аккаунт</strong><small>Выйти или войти под другим профилем</small></span><b>›</b></button></div><div class="settings-group"><span class="group-label">ПРИЛОЖЕНИЕ</span><button class="setting-row" id="install-help"><span class="setting-icon pink">⌂</span><span><strong>Установка на iPhone</strong><small>Добавить NEGRAM на экран «Домой»</small></span><b>›</b></button><button class="setting-row" id="about-button"><span class="setting-icon silver">✦</span><span><strong>О NEGRAM</strong><small>Версия 2.1 · сетевая тестовая сборка</small></span><b>›</b></button></div>
+        <div class="settings-group"><span class="group-label">ПЕРСОНАЛИЗАЦИЯ</span><button class="setting-row" data-page="themes"><span class="setting-icon violet">✧</span><span><strong>Темы оформления</strong><small>Цвета и атмосфера приложения</small></span><b>›</b></button><button class="setting-row" data-page="premium"><span class="setting-icon silver">✦</span><span><strong>NeGram +</strong><small>Подписка и дополнительные возможности</small></span><b>›</b></button></div>
+        <div class="settings-group"><span class="group-label">АККАУНТ</span><button class="setting-row" id="switch-account"><span class="setting-icon violet">⇄</span><span><strong>Сменить аккаунт</strong><small>Выйти или войти под другим профилем</small></span><b>›</b></button></div><div class="settings-group"><span class="group-label">ПРИЛОЖЕНИЕ</span><button class="setting-row" id="install-help"><span class="setting-icon pink">⌂</span><span><strong>Установка на iPhone</strong><small>Добавить NEGRAM на экран «Домой»</small></span><b>›</b></button><button class="setting-row" id="about-button"><span class="setting-icon silver">✦</span><span><strong>О NEGRAM</strong><small>Версия 3.0 · сетевая тестовая сборка</small></span><b>›</b></button></div>
         <p class="settings-foot">NEGRAM <span>•</span> ТВОЁ ПРОСТРАНСТВО</p>
       </section>
     </main>
 
     <nav class="bottom-nav" aria-label="Основная навигация"><button class="nav-item active" data-page="chats"><span class="nav-icon">▤</span><span>Чаты</span></button><button class="nav-item" data-page="stickers"><span class="nav-icon">✧</span><span>Стикеры</span></button><button class="nav-item nav-center" data-page="chat"><span class="center-orb">N</span><span>NEGRAM</span></button><button class="nav-item" data-page="bubbles"><span class="nav-icon">▱</span><span>Пузыри</span></button><button class="nav-item" data-page="profile"><span class="nav-icon">◉</span><span>Профиль</span></button></nav>
   </div>
+  <section class="contact-modal" id="contact-modal" hidden aria-modal="true" role="dialog" aria-labelledby="contact-modal-title">
+    <div class="contact-modal-card">
+      <div class="contact-modal-head"><div><p class="eyebrow">NEGRAM CONTACTS</p><h2 id="contact-modal-title">Найти пользователя</h2></div><button type="button" id="close-contacts" aria-label="Закрыть">×</button></div>
+      <p class="contact-modal-note">Ищи по имени пользователя или номеру телефона. По номеру будут найдены только аккаунты с подтверждённым номером и включённой видимостью.</p>
+      <form id="contact-search-form"><input id="contact-search-query" autocomplete="off" placeholder="@username или +7…" maxlength="64" required><button type="submit">Найти</button></form>
+      <div id="contact-search-results" class="contact-search-results" aria-live="polite">Введи имя пользователя или номер телефона.</div>
+    </div>
+  </section>
   <div class="toast" id="toast" role="status"></div>
   <script src="config.js"></script>
   <script src="app.js"></script>
