@@ -1,24 +1,58 @@
-NEGRAM 2.0 — DEVELOPMENT BUILD
-Based on the original 0.7 visual interface. This archive is a separate local test build; it does not deploy or modify the live GitHub Pages site or Cloudflare Worker.
+NeGram 2.1 NETWORK — отдельная тестовая сборка
+================================================
 
-Included in this update:
-- Main subscription label changed to NeGram +; original demo price/conditions are unchanged.
-- NeGram + benefits section expanded with exclusive sticker packs, animated face reactions, themes, customization and emoji status concepts.
-- 24 expressive face reactions added to the sticker gallery and inline chat sticker panel.
-- Four independent local test chats: Тестовый чат, Кирилл, Вася, Петя.
-- Message context menu on long press/right-click: copy, edit, delete, forward to another local test chat.
-- Video-circle shortcut placed beside sticker and voice controls in the chat composer.
-- Profile editor: change nickname, username and password locally. Passwords remain PBKDF2 hashes.
-- Developer badge uses the actual NeGram icon.svg and is labelled Разработчик; local demo developer panel shows device-only counts and local account names, never passwords or message contents.
-- Readable handwritten-style heading font fallback.
-- Service worker cache version bumped.
+СОБРАНО ИЗ
+- NEGRAM-0.7-PLUS.zip — исходный интерфейс, стили, PWA и профиль.
+- NeGram_0.8_Emoji_Update.zip — 50 анимированных лиц и редактор своих эмодзи.
+- Подготовленный API Worker / D1 migration из пакета NeGram 2.1 STARTER.
 
-Important limitations:
-- This is still a local prototype. Accounts, chats, subscription status, developer rights and settings are not synchronized or enforced by a server.
-- NeGram + activation is a local demo; there is no payment provider.
-- The developer panel is a local demo, not a secure server admin panel. The hidden-presence switch does not change real online status.
-- The current voice AutoTune selector is still a playback/effect demo, not true pitch correction. True pitch correction and processing of the audio track in video circles remain unfinished.
-- Voice/media recordings are not persisted across reloads or delivered to other devices.
-- No site or Worker deployment was performed.
+ЧТО ПОДКЛЮЧЕНО В ЭТОЙ СБОРКЕ
+- Серверная регистрация и вход: POST /register, POST /login, GET /me.
+- Сессии по токенам, сохранённым отдельно для каждого аккаунта на устройстве.
+- Переключение между ранее использованными аккаунтами; новый аккаунт можно добавить через вход.
+- Список чатов с сервера: GET /chats.
+- Создание личных чатов: POST /chats/private.
+- Создание групповых чатов: POST /chats/group.
+- Загрузка истории и отправка текстовых сообщений.
+- Обновление новых сообщений периодическим запросом примерно раз в 2,5 секунды.
+- 50 анимированных лиц; выбор вставляет Unicode-эмодзи в поле сообщения, откуда они уходят через сервер.
+- Редактор собственных эмодзи с кадрированием. Коллекция хранится локально на текущем устройстве.
+- Готовые аватарки и обложки профиля. Пока хранятся локально для каждого аккаунта.
+- Удалена интеграция NEGRAM AI; Worker AI не вызывается.
+- Старый сайт не меняется: это отдельная сборка.
 
-Test the archive locally/through HTTPS before any deployment. Do not put passwords, API tokens or private keys into this prototype.
+СЕРВЕР
+В app.js задан основной адрес:
+https://negram-messenger.cameraz-09165.workers.dev
+
+Добавлен резервный адрес из подготовленного STARTER-пакета:
+https://negram-messages.cameraz-09165.workers.dev
+
+Приложение проверяет /health и использует доступный Worker. Если фактический адрес в Cloudflare отличается, укажите точный публичный URL в config.js в переменной window.NEGRAM_API_BASE.
+
+Регистрация передаёт inviteCode на сервер. Секрет INVITE_CODE должен быть настроен в Worker как secret; сам секрет в сайт не вшивается и в архив не включён.
+
+ОГРАНИЧЕНИЯ, КОТОРЫЕ НЕ СКРЫВАЮ
+- В текущем API передаются только текстовые сообщения и Unicode-эмодзи.
+- Фото, видео, голосовые сообщения, видеокружки и изображения пользовательских эмодзи пока не загружаются на сервер.
+- Собственные эмодзи, аватарки и обложки пока локальные и не синхронизируются между устройствами.
+- Индикатор набора текста и Ghost Plus ещё не связаны с сервером присутствия.
+- Premium/NeGram + не активируется демонстрационными кнопками. Реальные платежи и серверная проверка подписки ещё не подключены.
+- Бейдж NeGramDev пока только визуально определяется по username negramdev; серверная роль и проверка полномочий ещё не добавлены.
+- Нет сквозного шифрования. Не используйте для чувствительной информации.
+- Обновление сообщений работает polling-запросами, не WebSocket.
+
+ВАЖНО ПРО SERVER-REFERENCE
+Папка server-reference содержит копию Worker и SQL из подготовленного STARTER-пакета только для сверки. Это не команда заново разворачивать сервер и не подтверждение, что этот файл в точности совпадает с кодом уже опубликованного Worker. Не запускайте migration.sql повторно и не заменяйте работающий Worker без проверки текущей конфигурации.
+
+ПРОВЕРКА ПЕРЕД ПУБЛИКАЦИЕЙ
+1. Открыть сборку через HTTPS (GitHub Pages или локальный HTTPS-сервер), не через file://.
+2. Проверить /health у фактического Worker.
+3. На первом устройстве зарегистрировать тестовый аккаунт с действующим кодом приглашения.
+4. На втором устройстве зарегистрировать другой аккаунт.
+5. Создать личный чат по username второго аккаунта.
+6. Отправить сообщения в обе стороны; проверить историю после обновления страницы.
+7. Создать групповой чат и проверить его список/сообщения.
+8. Проверить переключение аккаунтов на одном устройстве.
+
+Не публиковать поверх старого сайта до завершения этой проверки.
